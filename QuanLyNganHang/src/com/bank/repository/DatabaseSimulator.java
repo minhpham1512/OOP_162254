@@ -8,94 +8,102 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Khung lớp giả lập cơ sở dữ liệu (DatabaseSimulator Skeleton)
+ * Lớp giả lập cơ sở dữ liệu (Database)
+ * Sử dụng HashMap để lưu trữ dữ liệu trong bộ nhớ.
+ * Đây là nơi lớp Service sẽ tương tác.
  */
 public class DatabaseSimulator {
-    // --- KHAI BÁO CẤU TRÚC LƯU TRỮ (DATA STORE) ---
+    // Sử dụng static để mô phỏng một database duy nhất
     private static final Map<String, User> users = new HashMap<>();
     private static final Map<String, Account> accounts = new HashMap<>();
     private static final Map<String, Card> cards = new HashMap<>();
     private static final Map<String, Loan> loans = new HashMap<>();
     private static final Map<String, SavingsAccount> savingsAccounts = new HashMap<>();
     private static final List<Transaction> transactions = new ArrayList<>();
+    //... (Bạn có thể thêm Services, ServiceLogs...)
 
     // --- User Methods ---
     public User findUserById(String customerId) {
-        // TODO: Viết logic tìm user theo ID
-        return null; 
+        return users.get(customerId);
     }
-
     public User findUserByEmail(String email) {
-        // TODO: Viết logic tìm user theo Email (dùng stream filter)
-        return null;
+        return users.values().stream()
+            .filter(u -> u.getEmail().equals(email))
+            .findFirst().orElse(null);
     }
-
+    public User findUserByCCCD(String cccd) {
+        return users.values().stream()
+            .filter(u -> u.getCccd().equals(cccd))
+            .findFirst().orElse(null);
+    }
+    public User findUserByPhoneNumber(String phoneNumber) {
+        return users.values().stream()
+            .filter(u -> u.getPhoneNumber().equals(phoneNumber))
+            .findFirst().orElse(null);
+    }
     public void saveUser(User user) {
-        // TODO: Viết logic lưu user vào map
+        users.put(user.getCustomerId(), user);
     }
-
     public List<User> findAllUsers() {
-        // TODO: Viết logic trả về danh sách tất cả user
-        return new ArrayList<>();
+        return new ArrayList<>(users.values());
     }
 
     // --- Account Methods ---
     public Account findAccountById(String accountNumber) {
-        // TODO: Viết logic tìm tài khoản theo số tài khoản
-        return null;
+        return accounts.get(accountNumber);
     }
-
     public List<Account> findAccountsByCustomerId(String customerId) {
-        // TODO: Viết logic tìm các tài khoản thuộc về một khách hàng
-        return new ArrayList<>();
+        return accounts.values().stream()
+            .filter(a -> a.getCustomerId().equals(customerId))
+            .collect(Collectors.toList());
     }
-
     public void saveAccount(Account account) {
-        // TODO: Viết logic lưu tài khoản
+        accounts.put(account.getAccountNumber(), account);
     }
 
     // --- Card Methods ---
     public Card findCardById(String cardNumber) {
-        // TODO: Viết logic tìm thẻ
-        return null;
+        return cards.get(cardNumber);
     }
-
     public List<Card> findCardsByAccountId(String accountId) {
-        // TODO: Viết logic tìm các thẻ liên kết với tài khoản
-        return new ArrayList<>();
+        return cards.values().stream()
+            .filter(c -> c.getAccountNumber().equals(accountId))
+            .collect(Collectors.toList());
     }
-
     public void saveCard(Card card) {
-        // TODO: Viết logic lưu thẻ
+        cards.put(card.getCardNumber(), card);
     }
     
     // --- Transaction Methods ---
     public void saveTransaction(Transaction tx) {
-        // TODO: Viết logic lưu giao dịch
+        transactions.add(tx);
     }
-
     public List<Transaction> findTransactionsByAccountId(String accountId) {
-        // TODO: Viết logic tìm giao dịch liên quan đến tài khoản (gửi hoặc nhận)
-        return new ArrayList<>();
+        return transactions.stream()
+            .filter(tx -> (accountId.equals(tx.getFromAccountId()) || accountId.equals(tx.getToAccountId())))
+            .collect(Collectors.toList());
     }
     
     // --- Loan Methods ---
     public void saveLoan(Loan loan) {
-        // TODO: Viết logic lưu khoản vay
+        loans.put(loan.getLoanId(), loan);
     }
-
+    public Loan findLoanById(String loanId) {
+        return loans.get(loanId);
+    }
     public List<Loan> findLoansByCustomerId(String customerId) {
-        // TODO: Viết logic tìm khoản vay của khách hàng
-        return new ArrayList<>();
+        return loans.values().stream()
+            .filter(l -> l.getCustomerId().equals(customerId))
+            .collect(Collectors.toList());
     }
     
     // --- Savings Methods ---
     public void saveSavingsAccount(SavingsAccount sa) {
-        // TODO: Viết logic lưu sổ tiết kiệm
+        savingsAccounts.put(sa.getSavingsId(), sa);
     }
-
     public List<SavingsAccount> findSavingsByCustomerId(String customerId) {
-        // TODO: Viết logic tìm sổ tiết kiệm của khách hàng
-        return new ArrayList<>();
+        return savingsAccounts.values().stream()
+            .filter(sa -> sa.getCustomerId().equals(customerId))
+            .collect(Collectors.toList());
     }
 }
