@@ -11,7 +11,6 @@ import java.util.UUID;
 /**
  * Lớp Service (Dịch vụ)
  * Chứa logic nghiệp vụ chính cho các hoạt động liên quan đến tài khoản.
- * (Phiên bản này đã sửa tất cả các lỗi)
  */
 public class AccountService {
     private DatabaseSimulator db;
@@ -28,13 +27,11 @@ public class AccountService {
         Account toAccount = db.findAccountById(toAccountId);
 
         if (fromAccount == null || toAccount == null) {
-            // Thay đổi: Ném lỗi
             throw new Exception("Lỗi: Tài khoản nguồn hoặc đích không tồn tại.");
         }
 
         // Kiểm tra số dư (logic thẻ ghi nợ mặc định)
         if (fromAccount.getBalance() < amount) {
-            // Thay đổi: Ném lỗi
             throw new Exception("Lỗi: Số dư không đủ.");
         }
         
@@ -44,7 +41,6 @@ public class AccountService {
                             .filter(c -> c instanceof com.bank.model.DebitCard)
                             .findFirst().orElse(null);
                             
-        // (Lỗi của bạn có thể ở dòng "if" bên dưới, nhưng phiên bản này là đúng)
         if (defaultCard == null || !defaultCard.isTransactionValid(amount, fromAccount.getBalance())) {
              // Thay đổi: Ném lỗi
              throw new Exception("Lỗi: Thẻ không hợp lệ hoặc số dư không đủ.");
@@ -69,7 +65,6 @@ public class AccountService {
 
     /**
      * Nghiệp vụ xem số dư
-     * (Đây là phiên bản ĐÚNG, ném ra Exception)
      */
     public double getBalance(String accountId) throws Exception {
         Account account = db.findAccountById(accountId);
@@ -105,7 +100,6 @@ public class AccountService {
             throw new Exception("Lỗi: Thẻ này không hỗ trợ rút tiền.");
         }
         
-        // (Lỗi của bạn có thể ở dòng "if" bên dưới, nhưng phiên bản này là đúng)
         // Kiểm tra thẻ có hợp lệ cho số tiền này không (dựa trên loại thẻ)
         if (!card.isTransactionValid(amount, account.getBalance())) {
             // Thay đổi: Ném lỗi
@@ -138,3 +132,4 @@ public class AccountService {
         }
     }
 }
+
