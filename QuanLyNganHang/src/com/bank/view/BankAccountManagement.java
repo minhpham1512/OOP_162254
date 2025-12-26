@@ -95,6 +95,7 @@ public class BankAccountManagement extends JPanel {
      */
     private JPanel createMainContent() {
         JPanel panel = new JPanel(new GridLayout(2, 1, 10, 10));
+        panel.setBackground(ThemeColors.BG_DARK);
 
         // Phần trên: Bảng danh sách tài khoản
         panel.add(createAccountTablePanel());
@@ -110,6 +111,7 @@ public class BankAccountManagement extends JPanel {
      */
     private JPanel createAccountTablePanel() {
         JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.setBackground(ThemeColors.BG_LIGHT);
         panel.setBorder(BorderFactory.createTitledBorder("DANH SÁCH TÀI KHOẢN"));
 
         // Tạo bảng
@@ -121,6 +123,8 @@ public class BankAccountManagement extends JPanel {
             }
         };
         accountTable = new JTable(tableModel);
+        accountTable.setBackground(ThemeColors.BG_DARKER);
+        accountTable.setForeground(ThemeColors.TEXT_PRIMARY);
         accountTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         accountTable.setRowHeight(25);
         accountTable.getSelectionModel().addListSelectionListener(e -> showAccountDetails());
@@ -130,10 +134,11 @@ public class BankAccountManagement extends JPanel {
 
         // Panel nút
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        buttonPanel.setBackground(ThemeColors.BG_LIGHT);
         JButton deleteButton = new JButton("Đóng tài khoản");
         JButton refreshButton = new JButton("Làm mới");
-        deleteButton.setBackground(new Color(220, 20, 60));
-        deleteButton.setForeground(Color.WHITE);
+        deleteButton.setBackground(ThemeColors.DANGER);
+        deleteButton.setForeground(ThemeColors.TEXT_PRIMARY);
         buttonPanel.add(deleteButton);
         buttonPanel.add(refreshButton);
         panel.add(buttonPanel, BorderLayout.SOUTH);
@@ -150,6 +155,7 @@ public class BankAccountManagement extends JPanel {
      */
     private JPanel createDetailAndFormPanel() {
         JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
+        panel.setBackground(ThemeColors.BG_DARK);
 
         // Phần trái: Chi tiết tài khoản
         panel.add(createAccountDetailPanel());
@@ -165,9 +171,12 @@ public class BankAccountManagement extends JPanel {
      */
     private JPanel createAccountDetailPanel() {
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(ThemeColors.BG_LIGHT);
         panel.setBorder(BorderFactory.createTitledBorder("CHI TIẾT TÀI KHOẢN"));
 
         accountDetailArea = new JTextArea(8, 30);
+        accountDetailArea.setBackground(ThemeColors.BG_DARKER);
+        accountDetailArea.setForeground(ThemeColors.TEXT_PRIMARY);
         accountDetailArea.setEditable(false);
         accountDetailArea.setFont(new Font("Monospaced", Font.PLAIN, 11));
         accountDetailArea.setText("Chọn một tài khoản để xem chi tiết...");
@@ -183,6 +192,7 @@ public class BankAccountManagement extends JPanel {
      */
     private JPanel createNewAccountFormPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBackground(ThemeColors.BG_LIGHT);
         panel.setBorder(BorderFactory.createTitledBorder("TẠO TÀI KHOẢN MỚI"));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);

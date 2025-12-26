@@ -71,6 +71,7 @@ public class BankLoan extends JPanel {
      */
     private JPanel createMainContent() {
         JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
+        panel.setBackground(ThemeColors.BG_DARK);
 
         // Phần trái: Danh sách khoản vay hiện tại
         panel.add(createLoanListPanel());
@@ -86,10 +87,13 @@ public class BankLoan extends JPanel {
      */
     private JPanel createLoanListPanel() {
         JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.setBackground(ThemeColors.BG_LIGHT);
         panel.setBorder(BorderFactory.createTitledBorder("DANH SÁCH KHOẢN VAY"));
 
         loansListModel = new DefaultListModel<>();
         activeLoansList = new JList<>(loansListModel);
+        activeLoansList.setBackground(ThemeColors.BG_DARKER);
+        activeLoansList.setForeground(ThemeColors.TEXT_PRIMARY);
         JScrollPane scrollPane = new JScrollPane(activeLoansList);
         panel.add(scrollPane, BorderLayout.CENTER);
 
@@ -120,6 +124,7 @@ public class BankLoan extends JPanel {
      */
     private JPanel createNewLoanPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBackground(ThemeColors.BG_LIGHT);
         panel.setBorder(BorderFactory.createTitledBorder("TẠO ĐƠN VAY MỚI"));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);

@@ -58,6 +58,7 @@ public class BackupView extends JPanel {
      */
     private JPanel createButtonPanel() {
         JPanel panel = new JPanel(new GridLayout(5, 1, 5, 5));
+        panel.setBackground(ThemeColors.BG_LIGHT);
         panel.setPreferredSize(new Dimension(200, 0));
         panel.setBorder(BorderFactory.createTitledBorder("Chức năng"));
 
@@ -109,13 +110,14 @@ public class BackupView extends JPanel {
      */
     private JPanel createContentPanel() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBackground(ThemeColors.BG_DARK);
 
         // Khu vực thông tin
         infoArea = new JTextArea(15, 50);
         infoArea.setEditable(false);
         infoArea.setLineWrap(true);
         infoArea.setWrapStyleWord(true);
-        infoArea.setBackground(ThemeColors.BG_LIGHT);
+        infoArea.setBackground(ThemeColors.BG_DARKER);
         infoArea.setForeground(ThemeColors.TEXT_PRIMARY);
         infoArea.setFont(new Font("Courier New", Font.PLAIN, 11));
         infoArea.setText("Chọn chức năng để bắt đầu sao lưu dữ liệu...");

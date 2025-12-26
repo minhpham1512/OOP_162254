@@ -39,11 +39,11 @@ public class ReportView extends JPanel {
      */
     private JPanel createHeaderPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panel.setBackground(new Color(70, 130, 180));
+        panel.setBackground(ThemeColors.PRIMARY);
 
         JLabel titleLabel = new JLabel("XUẤT BÁO CÁO");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setForeground(ThemeColors.TEXT_PRIMARY);
         panel.add(titleLabel);
 
         return panel;
@@ -54,37 +54,38 @@ public class ReportView extends JPanel {
      */
     private JPanel createButtonPanel() {
         JPanel panel = new JPanel(new GridLayout(5, 1, 5, 5));
+        panel.setBackground(ThemeColors.BG_LIGHT);
         panel.setPreferredSize(new Dimension(200, 0));
         panel.setBorder(BorderFactory.createTitledBorder("Loại báo cáo"));
 
         // Nút Báo cáo tài khoản
         exportAccountReportBtn = new JButton("Báo cáo tài khoản");
-        exportAccountReportBtn.setBackground(new Color(34, 139, 34));
-        exportAccountReportBtn.setForeground(Color.WHITE);
+        exportAccountReportBtn.setBackground(ThemeColors.SUCCESS);
+        exportAccountReportBtn.setForeground(ThemeColors.TEXT_PRIMARY);
         exportAccountReportBtn.setFont(new Font("Arial", Font.BOLD, 11));
         exportAccountReportBtn.addActionListener(e -> exportAccountReport());
         panel.add(exportAccountReportBtn);
 
         // Nút Báo cáo khoản vay
         exportLoanReportBtn = new JButton("💳 Báo cáo khoản vay");
-        exportLoanReportBtn.setBackground(new Color(70, 130, 180));
-        exportLoanReportBtn.setForeground(Color.WHITE);
+        exportLoanReportBtn.setBackground(ThemeColors.PRIMARY);
+        exportLoanReportBtn.setForeground(ThemeColors.TEXT_PRIMARY);
         exportLoanReportBtn.setFont(new Font("Arial", Font.BOLD, 11));
         exportLoanReportBtn.addActionListener(e -> exportLoanReport());
         panel.add(exportLoanReportBtn);
 
         // Nút Báo cáo khách hàng
         exportCustomerReportBtn = new JButton("👤 Báo cáo khách hàng");
-        exportCustomerReportBtn.setBackground(new Color(255, 140, 0));
-        exportCustomerReportBtn.setForeground(Color.WHITE);
+        exportCustomerReportBtn.setBackground(ThemeColors.WARNING);
+        exportCustomerReportBtn.setForeground(ThemeColors.TEXT_PRIMARY);
         exportCustomerReportBtn.setFont(new Font("Arial", Font.BOLD, 11));
         exportCustomerReportBtn.addActionListener(e -> exportCustomerReport());
         panel.add(exportCustomerReportBtn);
 
         // Nút Báo cáo tổng quát (Admin only)
         exportSystemReportBtn = new JButton("Báo cáo tổng quát");
-        exportSystemReportBtn.setBackground(new Color(200, 16, 46));
-        exportSystemReportBtn.setForeground(Color.WHITE);
+        exportSystemReportBtn.setBackground(ThemeColors.DANGER);
+        exportSystemReportBtn.setForeground(ThemeColors.TEXT_PRIMARY);
         exportSystemReportBtn.setFont(new Font("Arial", Font.BOLD, 11));
         exportSystemReportBtn.addActionListener(e -> exportSystemReport());
         
@@ -95,6 +96,7 @@ public class ReportView extends JPanel {
         panel.add(exportSystemReportBtn);
 
         JPanel spacer = new JPanel();
+        spacer.setBackground(ThemeColors.BG_LIGHT);
         panel.add(spacer);
 
         return panel;
@@ -105,13 +107,15 @@ public class ReportView extends JPanel {
      */
     private JPanel createContentPanel() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBackground(ThemeColors.BG_DARK);
 
         // Khu vực hiển thị thông tin
         reportArea = new JTextArea(15, 50);
         reportArea.setEditable(false);
         reportArea.setLineWrap(true);
         reportArea.setWrapStyleWord(true);
-        reportArea.setBackground(new Color(240, 240, 240));
+        reportArea.setBackground(ThemeColors.BG_DARKER);
+        reportArea.setForeground(ThemeColors.TEXT_PRIMARY);
         reportArea.setFont(new Font("Courier New", Font.PLAIN, 11));
         JScrollPane scrollPane = new JScrollPane(reportArea);
         panel.add(scrollPane, BorderLayout.CENTER);
@@ -119,7 +123,7 @@ public class ReportView extends JPanel {
         // Khu vực trạng thái
         statusLabel = new JLabel("Chọn loại báo cáo để xuất");
         statusLabel.setFont(new Font("Arial", Font.ITALIC, 12));
-        statusLabel.setForeground(new Color(100, 100, 100));
+        statusLabel.setForeground(ThemeColors.TEXT_SECONDARY);
         panel.add(statusLabel, BorderLayout.SOUTH);
 
         return panel;

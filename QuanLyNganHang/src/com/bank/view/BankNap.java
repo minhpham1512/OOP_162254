@@ -68,6 +68,7 @@ public class BankNap extends JPanel {
      */
     private JPanel createMainContent() {
         JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
+        panel.setBackground(ThemeColors.BG_DARK);
 
         // Phần trái: Form nạp tiền
         panel.add(createDepositFormPanel());
@@ -83,6 +84,7 @@ public class BankNap extends JPanel {
      */
     private JPanel createDepositFormPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBackground(ThemeColors.BG_LIGHT);
         panel.setBorder(BorderFactory.createTitledBorder("THÔNG TIN NẠP TIỀN"));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -170,9 +172,12 @@ public class BankNap extends JPanel {
      */
     private JPanel createDepositHistoryPanel() {
         JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.setBackground(ThemeColors.BG_LIGHT);
         panel.setBorder(BorderFactory.createTitledBorder("LỊCH SỬ NẠP TIỀN"));
 
         depositHistoryArea = new JTextArea(10, 30);
+        depositHistoryArea.setBackground(ThemeColors.BG_DARKER);
+        depositHistoryArea.setForeground(ThemeColors.TEXT_PRIMARY);
         depositHistoryArea.setEditable(false);
         depositHistoryArea.setFont(new Font("Monospaced", Font.PLAIN, 10));
         JScrollPane scrollPane = new JScrollPane(depositHistoryArea);
@@ -180,6 +185,7 @@ public class BankNap extends JPanel {
 
         // Panel nút
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        buttonPanel.setBackground(ThemeColors.BG_LIGHT);
         JButton refreshButton = new JButton("Làm mới");
         JButton exportButton = new JButton("Xuất báo cáo");
         buttonPanel.add(refreshButton);
