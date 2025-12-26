@@ -153,6 +153,7 @@ public class BankLoan extends JPanel {
         gbc.gridx = 1;
         interestRateField = new JTextField(20);
         interestRateField.setText("5.5");
+        interestRateField.setEditable(false);
         panel.add(interestRateField, gbc);
 
         // Kỳ hạn
