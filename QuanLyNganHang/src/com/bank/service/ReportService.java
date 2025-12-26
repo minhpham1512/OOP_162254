@@ -268,8 +268,8 @@ public class ReportService {
             File file = new File(filePath);
             file.getParentFile().mkdirs();
             
-            // Ghi nội dung vào file
-            try (FileWriter writer = new FileWriter(file)) {
+            // Ghi nội dung vào file với UTF-8 encoding
+            try (FileWriter writer = new FileWriter(file, java.nio.charset.StandardCharsets.UTF_8)) {
                 writer.write(content);
             }
             
