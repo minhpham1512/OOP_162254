@@ -70,6 +70,17 @@ public class DatabaseSimulator {
             .filter(c -> c.getAccountNumber().equals(accountId))
             .collect(Collectors.toList());
     }
+    public List<Card> getCardsByCustomerId(String customerId) {
+        List<Card> customerCards = new ArrayList<>();
+        User customer = findUserById(customerId);
+        if (customer != null) {
+            List<Account> customerAccounts = findAccountsByCustomerId(customerId);
+            for (Account account : customerAccounts) {
+                customerCards.addAll(findCardsByAccountId(account.getAccountNumber()));
+            }
+        }
+        return customerCards;
+    }
     public void saveCard(Card card) {
         cards.put(card.getCardNumber(), card);
     }

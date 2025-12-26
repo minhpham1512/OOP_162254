@@ -6,7 +6,6 @@ import com.bank.repository.DatabaseSimulator;
 import java.util.UUID;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Lớp UserService - Quản lý người dùng (khách hàng)

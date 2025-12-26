@@ -11,7 +11,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Lớp BankAccountManagement - Giao diện quản lý tài khoản khách hàng
@@ -28,9 +27,6 @@ public class BankAccountManagement extends JPanel {
     private DatabaseSimulator db;
     private User currentUser;
     private CustomerAccountService customerAccountService;
-    private AccountService accountService;
-
-    // Các thành phần UI
     private JTable accountTable;
     private DefaultTableModel tableModel;
     private JLabel totalBalanceLabel;
@@ -43,7 +39,6 @@ public class BankAccountManagement extends JPanel {
                                  AccountService accountService) {
         this.db = db;
         this.currentUser = currentUser;
-        this.accountService = accountService;
         this.customerAccountService = new CustomerAccountService(db);
 
         // Kiểm tra quyền - chỉ CUSTOMER mới được xem

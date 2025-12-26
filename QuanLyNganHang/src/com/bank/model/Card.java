@@ -9,7 +9,6 @@ import java.util.Date;
 public abstract class Card {
     private String cardNumber; // Số thẻ (PK)
     private String accountNumber; // Liên kết với tài khoản (FK)
-    private Date issueDate; // Ngày phát hành
     private Date expiryDate; // Ngày hết hạn
     private CardStatus status; // Trạng thái thẻ
     
@@ -22,7 +21,6 @@ public abstract class Card {
     public Card(String cardNumber, String accountNumber, Date issueDate, Date expiryDate) {
         this.cardNumber = cardNumber;
         this.accountNumber = accountNumber;
-        this.issueDate = issueDate;
         this.expiryDate = expiryDate;
         this.status = CardStatus.ACTIVE;
     }

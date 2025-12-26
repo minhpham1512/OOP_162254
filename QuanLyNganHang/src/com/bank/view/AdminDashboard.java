@@ -2,7 +2,6 @@ package com.bank.view;
 
 import com.bank.model.Account;
 import com.bank.model.User;
-import com.bank.model.Transaction;
 import com.bank.repository.DatabaseSimulator;
 import com.bank.service.AccountService;
 
@@ -23,8 +22,6 @@ import java.util.List;
 public class AdminDashboard extends JPanel {
 
     private DatabaseSimulator db;
-    private User currentAdmin;
-    private AccountService accountService;
 
     // Các thành phần UI
     private JTable customerTable;
@@ -39,8 +36,6 @@ public class AdminDashboard extends JPanel {
 
     public AdminDashboard(DatabaseSimulator db, User currentAdmin, AccountService accountService) {
         this.db = db;
-        this.currentAdmin = currentAdmin;
-        this.accountService = accountService;
 
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));

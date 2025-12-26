@@ -600,6 +600,9 @@ public class BankGUI extends JFrame {
                 bankLoanPanel = new BankLoan(db, currentUser, accountService);
                 tabbedPane.addTab("Vay tiền", bankLoanPanel);
                 
+                CreditCardManagement creditCardPanel = new CreditCardManagement(db, currentUser, accountService);
+                tabbedPane.addTab("Thẻ tín dụng", creditCardPanel);
+                
                 // Thêm tab lịch sử giao dịch
                 tabbedPane.addTab("Lịch sử giao dịch", createHistoryPanel());
                 
