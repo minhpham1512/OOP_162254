@@ -56,11 +56,11 @@ public class BankLoan extends JPanel {
      */
     private JPanel createHeaderPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panel.setBackground(new Color(70, 130, 180));
+        panel.setBackground(ThemeColors.PRIMARY);
         
         JLabel titleLabel = new JLabel("QUẢN LÝ KHOẢN VAY TIỀN");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setForeground(ThemeColors.TEXT_PRIMARY);
         panel.add(titleLabel);
         
         return panel;
@@ -166,8 +166,8 @@ public class BankLoan extends JPanel {
         gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         JButton createLoanButton = new JButton("Tạo đơn vay");
-        createLoanButton.setBackground(new Color(34, 139, 34));
-        createLoanButton.setForeground(Color.WHITE);
+        createLoanButton.setBackground(ThemeColors.SUCCESS);
+        createLoanButton.setForeground(ThemeColors.TEXT_PRIMARY);
         createLoanButton.setFont(new Font("Arial", Font.BOLD, 12));
         panel.add(createLoanButton, gbc);
 
@@ -189,7 +189,8 @@ public class BankLoan extends JPanel {
         loanListArea.setText("Thông tin: Công ty sẽ phê duyệt đơn vay của bạn trong vòng 24-48 giờ.\n" +
                              "Lãi suất có thể thay đổi tùy theo loại vay và điều kiện khách hàng.\n" +
                              "Liên hệ với bộ phận hỗ trợ nếu bạn có bất kỳ câu hỏi nào.");
-        loanListArea.setBackground(new Color(240, 240, 240));
+        loanListArea.setBackground(ThemeColors.BG_LIGHT);
+        loanListArea.setForeground(ThemeColors.TEXT_PRIMARY);
         JScrollPane scrollPane = new JScrollPane(loanListArea);
         panel.add(scrollPane, BorderLayout.CENTER);
         return panel;

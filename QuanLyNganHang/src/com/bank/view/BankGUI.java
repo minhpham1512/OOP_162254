@@ -83,10 +83,10 @@ public class BankGUI extends JFrame {
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 
-                // Vẽ gradient từ xanh đậm đến tím nhạt (kiểu VietinBank)
+                // Vẽ gradient từ xanh dương đậm đến xanh dương nhạt (nhất quán)
                 GradientPaint gradient = new GradientPaint(
-                    0, 0, new Color(10, 80, 150),           // Xanh đậm phía trên
-                    getWidth(), getHeight(), new Color(100, 50, 150)  // Tím phía dưới
+                    0, 0, ThemeColors.PRIMARY_DARK,           // Xanh dương đậm phía trên
+                    getWidth(), getHeight(), ThemeColors.PRIMARY  // Xanh dương phía dưới
                 );
                 g2d.setPaint(gradient);
                 g2d.fillRect(0, 0, getWidth(), getHeight());
@@ -185,7 +185,7 @@ public class BankGUI extends JFrame {
         gbc.gridy = 1;
         JLabel bankNameLabel = new JLabel("NGÂN HÀNG OOP");
         bankNameLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        bankNameLabel.setForeground(new Color(255, 255, 255));
+        bankNameLabel.setForeground(ThemeColors.TEXT_PRIMARY);
         bankNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         centerPanel.add(bankNameLabel, gbc);
         
@@ -193,7 +193,7 @@ public class BankGUI extends JFrame {
         gbc.gridy = 2;
         JLabel descLabel = new JLabel("Hệ thống quản lý ngân hàng");
         descLabel.setFont(new Font("Arial", Font.ITALIC, 13));
-        descLabel.setForeground(new Color(200, 220, 255));
+        descLabel.setForeground(ThemeColors.PRIMARY_LIGHT);
         descLabel.setHorizontalAlignment(SwingConstants.CENTER);
         centerPanel.add(descLabel, gbc);
         
@@ -230,10 +230,10 @@ public class BankGUI extends JFrame {
             }
         };
         emailField.setBackground(new Color(255, 255, 255));
-        emailField.setForeground(new Color(30, 30, 30));
+        emailField.setForeground(ThemeColors.BG_DARK);
         emailField.setFont(new Font("Arial", Font.PLAIN, 13));
         emailField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(200, 220, 255), 1),
+            BorderFactory.createLineBorder(ThemeColors.PRIMARY_LIGHT, 2),
             BorderFactory.createEmptyBorder(8, 12, 8, 12)
         ));
         emailField.setPreferredSize(new Dimension(280, 36));
@@ -272,10 +272,10 @@ public class BankGUI extends JFrame {
             }
         };
         passwordField.setBackground(new Color(255, 255, 255));
-        passwordField.setForeground(new Color(30, 30, 30));
+        passwordField.setForeground(ThemeColors.BG_DARK);
         passwordField.setFont(new Font("Arial", Font.PLAIN, 13));
         passwordField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(200, 220, 255), 1),
+            BorderFactory.createLineBorder(ThemeColors.PRIMARY_LIGHT, 2),
             BorderFactory.createEmptyBorder(8, 12, 8, 12)
         ));
         passwordField.setPreferredSize(new Dimension(280, 36));

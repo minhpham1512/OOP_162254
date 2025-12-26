@@ -53,11 +53,11 @@ public class BankNap extends JPanel {
      */
     private JPanel createHeaderPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panel.setBackground(new Color(70, 130, 180));
+        panel.setBackground(ThemeColors.PRIMARY);
 
         JLabel titleLabel = new JLabel("NẠP TIỀN VÀO TÀI KHOẢN");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setForeground(ThemeColors.TEXT_PRIMARY);
         panel.add(titleLabel);
 
         return panel;
@@ -95,7 +95,7 @@ public class BankNap extends JPanel {
         gbc.gridx = 1;
         currentBalanceLabel = new JLabel("0.00 VND");
         currentBalanceLabel.setFont(new Font("Arial", Font.BOLD, 12));
-        currentBalanceLabel.setForeground(new Color(34, 139, 34));
+        currentBalanceLabel.setForeground(ThemeColors.SUCCESS);
         panel.add(currentBalanceLabel, gbc);
 
         // Chọn tài khoản
@@ -154,8 +154,8 @@ public class BankNap extends JPanel {
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         JButton depositButton = new JButton("Nạp tiền");
-        depositButton.setBackground(new Color(34, 139, 34));
-        depositButton.setForeground(Color.WHITE);
+        depositButton.setBackground(ThemeColors.SUCCESS);
+        depositButton.setForeground(ThemeColors.TEXT_PRIMARY);
         depositButton.setFont(new Font("Arial", Font.BOLD, 12));
         panel.add(depositButton, gbc);
 
@@ -207,7 +207,8 @@ public class BankNap extends JPanel {
         infoArea.setText("Thông tin: Gửi tiền nhanh chóng và an toàn. " +
                         "Tiền sẽ được cộng vào tài khoản trong vòng 2-24 giờ tùy phương thức. " +
                         "Phí nạp tiền (nếu có) sẽ được thông báo trong quá trình xử lý.");
-        infoArea.setBackground(new Color(240, 240, 240));
+        infoArea.setBackground(ThemeColors.BG_LIGHT);
+        infoArea.setForeground(ThemeColors.TEXT_PRIMARY);
         JScrollPane scrollPane = new JScrollPane(infoArea);
         panel.add(scrollPane, BorderLayout.CENTER);
         return panel;

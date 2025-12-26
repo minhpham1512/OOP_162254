@@ -43,11 +43,11 @@ public class BackupView extends JPanel {
      */
     private JPanel createHeaderPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panel.setBackground(new Color(70, 130, 180));
+        panel.setBackground(ThemeColors.PRIMARY);
 
         JLabel titleLabel = new JLabel("SAO LƯU DỮ LIỆU");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setForeground(ThemeColors.TEXT_PRIMARY);
         panel.add(titleLabel);
 
         return panel;
@@ -63,40 +63,40 @@ public class BackupView extends JPanel {
 
         // Nút sao lưu
         performBackupBtn = new JButton("Sao lưu ngay");
-        performBackupBtn.setBackground(new Color(34, 139, 34));
-        performBackupBtn.setForeground(Color.WHITE);
+        performBackupBtn.setBackground(ThemeColors.SUCCESS);
+        performBackupBtn.setForeground(ThemeColors.TEXT_PRIMARY);
         performBackupBtn.setFont(new Font("Arial", Font.BOLD, 11));
         performBackupBtn.addActionListener(e -> performBackup());
         panel.add(performBackupBtn);
 
         // Nút liệt kê
         listBackupsBtn = new JButton("📋 Danh sách");
-        listBackupsBtn.setBackground(new Color(70, 130, 180));
-        listBackupsBtn.setForeground(Color.WHITE);
+        listBackupsBtn.setBackground(ThemeColors.PRIMARY);
+        listBackupsBtn.setForeground(ThemeColors.TEXT_PRIMARY);
         listBackupsBtn.setFont(new Font("Arial", Font.BOLD, 11));
         listBackupsBtn.addActionListener(e -> listBackups());
         panel.add(listBackupsBtn);
 
         // Nút xóa cũ
         deleteOldBtn = new JButton("🗑️ Xóa bản cũ");
-        deleteOldBtn.setBackground(new Color(200, 16, 46));
-        deleteOldBtn.setForeground(Color.WHITE);
+        deleteOldBtn.setBackground(ThemeColors.DANGER);
+        deleteOldBtn.setForeground(ThemeColors.TEXT_PRIMARY);
         deleteOldBtn.setFont(new Font("Arial", Font.BOLD, 11));
         deleteOldBtn.addActionListener(e -> deleteOldBackups());
         panel.add(deleteOldBtn);
 
         // Nút thống kê
         statsBtn = new JButton("Thống kê");
-        statsBtn.setBackground(new Color(255, 140, 0));
-        statsBtn.setForeground(Color.WHITE);
+        statsBtn.setBackground(ThemeColors.WARNING);
+        statsBtn.setForeground(ThemeColors.TEXT_PRIMARY);
         statsBtn.setFont(new Font("Arial", Font.BOLD, 11));
         statsBtn.addActionListener(e -> showStats());
         panel.add(statsBtn);
 
         // Nút mở thư mục
         openFolderBtn = new JButton("📁 Mở thư mục");
-        openFolderBtn.setBackground(new Color(128, 128, 128));
-        openFolderBtn.setForeground(Color.WHITE);
+        openFolderBtn.setBackground(ThemeColors.TEXT_SECONDARY);
+        openFolderBtn.setForeground(ThemeColors.TEXT_PRIMARY);
         openFolderBtn.setFont(new Font("Arial", Font.BOLD, 11));
         openFolderBtn.addActionListener(e -> openBackupFolder());
         panel.add(openFolderBtn);
@@ -115,7 +115,8 @@ public class BackupView extends JPanel {
         infoArea.setEditable(false);
         infoArea.setLineWrap(true);
         infoArea.setWrapStyleWord(true);
-        infoArea.setBackground(new Color(240, 240, 240));
+        infoArea.setBackground(ThemeColors.BG_LIGHT);
+        infoArea.setForeground(ThemeColors.TEXT_PRIMARY);
         infoArea.setFont(new Font("Courier New", Font.PLAIN, 11));
         infoArea.setText("Chọn chức năng để bắt đầu sao lưu dữ liệu...");
         JScrollPane scrollPane = new JScrollPane(infoArea);
@@ -124,7 +125,7 @@ public class BackupView extends JPanel {
         // Khu vực trạng thái
         statusLabel = new JLabel("Sẵn sàng");
         statusLabel.setFont(new Font("Arial", Font.ITALIC, 12));
-        statusLabel.setForeground(new Color(100, 100, 100));
+        statusLabel.setForeground(ThemeColors.TEXT_SECONDARY);
         panel.add(statusLabel, BorderLayout.SOUTH);
 
         return panel;

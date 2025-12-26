@@ -50,7 +50,7 @@ public class UIUtils {
     public static JLabel createTitleLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("Arial", Font.BOLD, 28));
-        label.setForeground(ThemeColors.PRIMARY);
+        label.setForeground(ThemeColors.TEXT_PRIMARY);
         return label;
     }
     
@@ -60,7 +60,7 @@ public class UIUtils {
     public static JLabel createSubtitleLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("Arial", Font.BOLD, 16));
-        label.setForeground(ThemeColors.PRIMARY_LIGHT);
+        label.setForeground(ThemeColors.SECONDARY);
         return label;
     }
     
@@ -75,9 +75,9 @@ public class UIUtils {
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 
-                // Vẽ gradient background
-                GradientPaint gradient = new GradientPaint(0, 0, bgColor, 
-                                                          0, getHeight(), lightenColor(bgColor, -0.2f));
+                // Vẽ gradient background từ PRIMARY đến PRIMARY_DARK
+                GradientPaint gradient = new GradientPaint(0, 0, ThemeColors.PRIMARY, 
+                                                          0, getHeight(), ThemeColors.PRIMARY_DARK);
                 g2d.setPaint(gradient);
                 g2d.fillRect(0, 0, getWidth(), getHeight());
             }
