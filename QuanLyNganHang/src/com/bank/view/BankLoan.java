@@ -1,6 +1,8 @@
 package com.bank.view;
 
 import com.bank.model.Loan;
+import com.bank.model.Account;
+import com.bank.model.Transaction;
 import com.bank.model.User;
 import com.bank.repository.DatabaseSimulator;
 import com.bank.service.AccountService;
@@ -181,6 +183,36 @@ public class BankLoan extends JPanel {
             loanToApprove.setStatus(Loan.LoanStatus.ACTIVE);
             db.saveLoan(loanToApprove);
 
+            // Tự động giải ngân: cộng tiền vào tài khoản đầu tiên của khách hàng (nếu có)
+            try {
+                java.util.List<Account> customerAccounts = db.findAccountsByCustomerId(loanToApprove.getCustomerId());
+                if (customerAccounts != null && !customerAccounts.isEmpty()) {
+                    Account acc = customerAccounts.get(0);
+                    acc.deposit(loanToApprove.getAmount());
+                    db.saveAccount(acc);
+
+                    // Ghi log giao dịch dạng DEPOSIT
+                    String txId = "TX" + java.util.UUID.randomUUID().toString().substring(0, 8);
+                    Transaction tx = new Transaction(txId, loanToApprove.getAmount(),
+                            "Giải ngân khoản vay: " + loanId,
+                            Transaction.TransactionType.DEPOSIT,
+                            null,
+                            acc.getAccountNumber());
+                    tx.setBalanceAfter(acc.getBalance());
+                    db.saveTransaction(tx);
+                } else {
+                    // Nếu khách hàng chưa có tài khoản, thông báo (không ném lỗi)
+                    JOptionPane.showMessageDialog(this,
+                            "Đã duyệt khoản vay nhưng không tìm thấy tài khoản để giải ngân cho khách hàng.",
+                            "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (Exception ex2) {
+                // Không để lỗi giải ngân làm hỏng luồng duyệt
+                JOptionPane.showMessageDialog(this,
+                        "Khoản vay đã được duyệt nhưng xảy ra lỗi khi giải ngân: " + ex2.getMessage(),
+                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+
             JOptionPane.showMessageDialog(this,
                                         String.format("✓ Đã duyệt khoản vay!\n" +
                                                      "Mã vay: %s\n" +
@@ -193,6 +225,15 @@ public class BankLoan extends JPanel {
                                         "Duyệt Thành Công", JOptionPane.INFORMATION_MESSAGE);
 
             refreshAdminLoanList();
+            // Nếu BankGUI đang mở (frame cha), yêu cầu cập nhật dashboard để phản ánh số dư mới
+            try {
+                java.awt.Window win = javax.swing.SwingUtilities.getWindowAncestor(this);
+                if (win instanceof com.bank.view.BankGUI) {
+                    ((com.bank.view.BankGUI) win).updateDashboardInfo();
+                }
+            } catch (Exception exRefresh) {
+                System.err.println("Không thể làm mới dashboard sau khi duyệt khoản vay: " + exRefresh.getMessage());
+            }
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage(),

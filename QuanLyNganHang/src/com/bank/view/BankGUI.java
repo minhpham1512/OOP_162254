@@ -552,6 +552,15 @@ public class BankGUI extends JFrame {
                 
                 JOptionPane.showMessageDialog(this, "✅ Chuyển tiền thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 amountField.setText("");
+
+                // Cập nhật giao diện/ số dư ngay lập tức
+                try {
+                    // Cập nhật lại các tab (nạp tiền, lịch sử, quản lý tài khoản, ...)
+                    updateDashboardInfo();
+                } catch (Exception uiEx) {
+                    // Nếu không thể cập nhật đầy đủ, in ra console để debug nhưng không làm vỡ luồng
+                    System.err.println("Không thể làm mới dashboard sau khi chuyển tiền: " + uiEx.getMessage());
+                }
                 
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "❌ Lỗi: Số tiền không hợp lệ.", "Lỗi Dữ liệu", JOptionPane.ERROR_MESSAGE);
@@ -566,7 +575,7 @@ public class BankGUI extends JFrame {
     /**
      * Cập nhật thông tin trên Dashboard (số dư, lịch sử)
      */
-    private void updateDashboardInfo() {
+    public void updateDashboardInfo() {
         if (currentUser == null) return;
 
         try {
