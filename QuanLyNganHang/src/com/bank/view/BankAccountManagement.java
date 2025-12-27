@@ -6,11 +6,10 @@ import com.bank.model.User;
 import com.bank.repository.DatabaseSimulator;
 import com.bank.service.AccountService;
 import com.bank.service.CustomerAccountService;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * Lớp BankAccountManagement - Giao diện quản lý tài khoản khách hàng

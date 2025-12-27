@@ -5,11 +5,10 @@ import com.bank.model.Transaction;
 import com.bank.model.User;
 import com.bank.repository.DatabaseSimulator;
 import com.bank.service.AccountService;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.UUID;
+import javax.swing.*;
 
 /**
  * Lớp BankNap - Giao diện nạp tiền vào tài khoản

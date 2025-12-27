@@ -4,11 +4,10 @@ import com.bank.model.Loan;
 import com.bank.model.User;
 import com.bank.repository.DatabaseSimulator;
 import com.bank.service.AccountService;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.UUID;
+import javax.swing.*;
 
 /**
  * Lớp giao diện quản lý chức năng VAY TIỀN (Loan Management)

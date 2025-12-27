@@ -1,14 +1,13 @@
 package com.bank.view;
 
-import com.bank.model.CreditCard;
 import com.bank.model.Card;
+import com.bank.model.CreditCard;
 import com.bank.model.User;
 import com.bank.repository.DatabaseSimulator;
 import com.bank.service.AccountService;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import javax.swing.*;
 
 /**
  * Lớp giao diện quản lý Thẻ tín dụng (Credit Card Management)
@@ -54,11 +53,11 @@ public class CreditCardManagement extends JPanel {
      */
     private JPanel createHeaderPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panel.setBackground(new Color(70, 130, 180));
+        panel.setBackground(ThemeColors.PRIMARY);
         
         JLabel titleLabel = new JLabel("QUẢN LÝ THẺ TÍN DỤNG");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setForeground(ThemeColors.TEXT_PRIMARY);
         panel.add(titleLabel);
         
         return panel;
@@ -127,7 +126,7 @@ public class CreditCardManagement extends JPanel {
         gbc.gridx = 1;
         creditLimitLabel = new JLabel("0 VND");
         creditLimitLabel.setFont(new Font("Arial", Font.BOLD, 12));
-        creditLimitLabel.setForeground(new Color(34, 139, 34));
+        creditLimitLabel.setForeground(ThemeColors.SUCCESS);
         panel.add(creditLimitLabel, gbc);
 
         // Dư nợ hiện tại
@@ -136,7 +135,7 @@ public class CreditCardManagement extends JPanel {
         gbc.gridx = 1;
         currentDebtLabel = new JLabel("0 VND");
         currentDebtLabel.setFont(new Font("Arial", Font.BOLD, 12));
-        currentDebtLabel.setForeground(new Color(255, 0, 0));
+        currentDebtLabel.setForeground(ThemeColors.DANGER);
         panel.add(currentDebtLabel, gbc);
 
         // Hạn mức còn lại
@@ -145,7 +144,7 @@ public class CreditCardManagement extends JPanel {
         gbc.gridx = 1;
         availableCreditLabel = new JLabel("0 VND");
         availableCreditLabel.setFont(new Font("Arial", Font.BOLD, 12));
-        availableCreditLabel.setForeground(new Color(0, 100, 200));
+        availableCreditLabel.setForeground(ThemeColors.PRIMARY);
         panel.add(availableCreditLabel, gbc);
 
         // Khoảng trắng
@@ -165,8 +164,8 @@ public class CreditCardManagement extends JPanel {
         gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         JButton payDebtButton = new JButton("Thanh toán dư nợ");
-        payDebtButton.setBackground(new Color(34, 139, 34));
-        payDebtButton.setForeground(Color.WHITE);
+        payDebtButton.setBackground(ThemeColors.SUCCESS);
+        payDebtButton.setForeground(ThemeColors.TEXT_PRIMARY);
         payDebtButton.setFont(new Font("Arial", Font.BOLD, 12));
         panel.add(payDebtButton, gbc);
 
@@ -186,7 +185,8 @@ public class CreditCardManagement extends JPanel {
         creditCardInfoArea.setLineWrap(true);
         creditCardInfoArea.setWrapStyleWord(true);
         creditCardInfoArea.setText("Chọn một thẻ để xem chi tiết");
-        creditCardInfoArea.setBackground(new Color(240, 240, 240));
+        creditCardInfoArea.setBackground(ThemeColors.BG_LIGHT);
+        creditCardInfoArea.setForeground(ThemeColors.TEXT_PRIMARY);
         JScrollPane scrollPane = new JScrollPane(creditCardInfoArea);
         panel.add(scrollPane, gbc);
 
@@ -204,7 +204,8 @@ public class CreditCardManagement extends JPanel {
         infoArea.setWrapStyleWord(true);
         infoArea.setText("Thông tin: Thẻ tín dụng cho phép bạn chi tiêu lên đến hạn mức được cấp. " +
                          "Bạn cần thanh toán dư nợ hàng tháng để duy trì tín dụng tốt.");
-        infoArea.setBackground(new Color(240, 240, 240));
+        infoArea.setBackground(ThemeColors.BG_LIGHT);
+        infoArea.setForeground(ThemeColors.TEXT_PRIMARY);
         JScrollPane scrollPane = new JScrollPane(infoArea);
         panel.add(scrollPane, BorderLayout.CENTER);
         return panel;
@@ -241,7 +242,10 @@ public class CreditCardManagement extends JPanel {
      */
     private void showCardDetail() {
         int selectedIndex = creditCardsList.getSelectedIndex();
-        if (selectedIndex < 0) return;
+        if (selectedIndex < 0) {
+            creditCardInfoArea.setText("Chọn một thẻ để xem chi tiết");
+            return;
+        }
 
         List<Card> allCards = db.getCardsByCustomerId(currentUser.getCustomerId());
         int creditCardIndex = 0;

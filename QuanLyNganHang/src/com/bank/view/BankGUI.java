@@ -83,10 +83,10 @@ public class BankGUI extends JFrame {
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 
-                // Vẽ gradient từ xanh dương đậm đến xanh dương nhạt (nhất quán)
+                // Vẽ gradient nền trắng
                 GradientPaint gradient = new GradientPaint(
-                    0, 0, ThemeColors.PRIMARY_DARK,           // Xanh dương đậm phía trên
-                    getWidth(), getHeight(), ThemeColors.PRIMARY  // Xanh dương phía dưới
+                    0, 0, ThemeColors.BG_LIGHT,           // Trắng phía trên
+                    getWidth(), getHeight(), ThemeColors.BG_DARK  // Trắng nhạt phía dưới
                 );
                 g2d.setPaint(gradient);
                 g2d.fillRect(0, 0, getWidth(), getHeight());
@@ -230,10 +230,10 @@ public class BankGUI extends JFrame {
             }
         };
         emailField.setBackground(new Color(255, 255, 255));
-        emailField.setForeground(ThemeColors.BG_DARK);
+        emailField.setForeground(new Color(20, 20, 20));
         emailField.setFont(new Font("Arial", Font.PLAIN, 13));
         emailField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(ThemeColors.PRIMARY_LIGHT, 2),
+            BorderFactory.createLineBorder(ThemeColors.PRIMARY, 2),
             BorderFactory.createEmptyBorder(8, 12, 8, 12)
         ));
         emailField.setPreferredSize(new Dimension(280, 36));
@@ -272,10 +272,10 @@ public class BankGUI extends JFrame {
             }
         };
         passwordField.setBackground(new Color(255, 255, 255));
-        passwordField.setForeground(ThemeColors.BG_DARK);
+        passwordField.setForeground(new Color(20, 20, 20));
         passwordField.setFont(new Font("Arial", Font.PLAIN, 13));
         passwordField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(ThemeColors.PRIMARY_LIGHT, 2),
+            BorderFactory.createLineBorder(ThemeColors.PRIMARY, 2),
             BorderFactory.createEmptyBorder(8, 12, 8, 12)
         ));
         passwordField.setPreferredSize(new Dimension(280, 36));
@@ -316,8 +316,8 @@ public class BankGUI extends JFrame {
         gbc.insets = new Insets(10, 40, 8, 40);
         JButton loginButton = new JButton("Đăng nhập");
         loginButton.setFont(new Font("Arial", Font.BOLD, 14));
-        loginButton.setForeground(new Color(30, 30, 30));
-        loginButton.setBackground(new Color(76, 175, 80));
+        loginButton.setForeground(ThemeColors.TEXT_PRIMARY);
+        loginButton.setBackground(ThemeColors.SUCCESS);
         loginButton.setBorder(BorderFactory.createEmptyBorder(12, 20, 12, 20));
         loginButton.setOpaque(true);
         loginButton.setFocusPainted(false);
@@ -328,8 +328,8 @@ public class BankGUI extends JFrame {
         gbc.gridy = 7;
         JButton registerButton = new JButton("Đăng ký");
         registerButton.setFont(new Font("Arial", Font.BOLD, 14));
-        registerButton.setForeground(new Color(30, 30, 30));
-        registerButton.setBackground(new Color(255, 152, 0));
+        registerButton.setForeground(ThemeColors.TEXT_PRIMARY);
+        registerButton.setBackground(ThemeColors.WARNING);
         registerButton.setBorder(BorderFactory.createEmptyBorder(12, 20, 12, 20));
         registerButton.setOpaque(true);
         registerButton.setFocusPainted(false);
@@ -341,7 +341,7 @@ public class BankGUI extends JFrame {
         gbc.weighty = 0.3;
         gbc.insets = new Insets(10, 20, 10, 20);
         JLabel otherAccountLabel = new JLabel("Đăng nhập tài khoản khác?");
-        otherAccountLabel.setForeground(new Color(100, 200, 255));
+        otherAccountLabel.setForeground(ThemeColors.PRIMARY);
         otherAccountLabel.setFont(new Font("Arial", Font.PLAIN, 11));
         otherAccountLabel.setHorizontalAlignment(SwingConstants.CENTER);
         otherAccountLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -404,8 +404,8 @@ public class BankGUI extends JFrame {
 
         // Tạo các tab chức năng (sẽ được điền sau khi đăng nhập)
         tabbedPane = new JTabbedPane();
-        tabbedPane.setBackground(new Color(35, 35, 40));
-        tabbedPane.setForeground(new Color(230, 230, 235));
+        tabbedPane.setBackground(ThemeColors.BG_LIGHT);
+        tabbedPane.setForeground(ThemeColors.TEXT_PRIMARY);
         tabbedPane.setFont(new Font("Arial", Font.BOLD, 13));
         
         // Điều chỉnh UI cho tab để tăng độ tương phản
@@ -439,9 +439,7 @@ public class BankGUI extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
         // Tiêu đề
-        JLabel titleLabel = UIUtils.createSubtitleLabel("Lịch sử giao dịch");
-        titleLabel.setForeground(ThemeColors.TEXT_PRIMARY);
-        mainPanel.add(titleLabel, BorderLayout.NORTH);
+        mainPanel.add(UIUtils.createSubtitleLabel("Lịch sử giao dịch"), BorderLayout.NORTH);
         
         JButton refreshButton = UIUtils.createStyledButton("Làm mới", ThemeColors.INFO, ThemeColors.TEXT_PRIMARY);
 
@@ -500,9 +498,7 @@ public class BankGUI extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
         // Tiêu đề
-        JLabel titleLabel = UIUtils.createSubtitleLabel("Chuyển tiền");
-        titleLabel.setForeground(ThemeColors.TEXT_PRIMARY);
-        mainPanel.add(titleLabel, BorderLayout.NORTH);
+        mainPanel.add(UIUtils.createSubtitleLabel("Chuyển tiền"), BorderLayout.NORTH);
         
         // Panel nội dung
         JPanel contentPanel = new JPanel(new GridBagLayout());
@@ -512,9 +508,7 @@ public class BankGUI extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         gbc.gridx = 0; gbc.gridy = 0;
-        JLabel toAccLabel = new JLabel("Tài khoản nhận:");
-        toAccLabel.setForeground(ThemeColors.TEXT_PRIMARY);
-        contentPanel.add(toAccLabel, gbc);
+        contentPanel.add(new JLabel("Tài khoản nhận:"), gbc);
         gbc.gridx = 1;
         JTextField toAccountField = new JTextField(20);
         toAccountField.setText("ACC002");
@@ -523,9 +517,7 @@ public class BankGUI extends JFrame {
         contentPanel.add(toAccountField, gbc);
 
         gbc.gridx = 0; gbc.gridy = 1;
-        JLabel amountLabel = new JLabel("Số tiền:");
-        amountLabel.setForeground(ThemeColors.TEXT_PRIMARY);
-        contentPanel.add(amountLabel, gbc);
+        contentPanel.add(new JLabel("Số tiền:"), gbc);
         gbc.gridx = 1;
         JTextField amountField = new JTextField(20);
         amountField.setBackground(ThemeColors.BG_LIGHT);
@@ -533,9 +525,7 @@ public class BankGUI extends JFrame {
         contentPanel.add(amountField, gbc);
 
         gbc.gridx = 0; gbc.gridy = 2;
-        JLabel contentLabel = new JLabel("Nội dung:");
-        contentLabel.setForeground(ThemeColors.TEXT_PRIMARY);
-        contentPanel.add(contentLabel, gbc);
+        contentPanel.add(new JLabel("Nội dung:"), gbc);
         gbc.gridx = 1;
         JTextField contentField = new JTextField(20);
         contentField.setText("Chuyen tien");

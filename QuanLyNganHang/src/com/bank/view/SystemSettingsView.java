@@ -45,11 +45,11 @@ public class SystemSettingsView extends JPanel {
      */
     private JPanel createHeaderPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panel.setBackground(new Color(70, 130, 180));
+        panel.setBackground(ThemeColors.PRIMARY);
 
         JLabel titleLabel = new JLabel("CÀI ĐẶT HỆ THỐNG");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setForeground(ThemeColors.TEXT_PRIMARY);
         panel.add(titleLabel);
 
         return panel;
@@ -87,26 +87,26 @@ public class SystemSettingsView extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
 
         viewSettingsBtn = new JButton("👁️ Xem cài đặt");
-        viewSettingsBtn.setBackground(new Color(70, 130, 180));
-        viewSettingsBtn.setForeground(Color.WHITE);
+        viewSettingsBtn.setBackground(ThemeColors.PRIMARY);
+        viewSettingsBtn.setForeground(ThemeColors.TEXT_PRIMARY);
         viewSettingsBtn.addActionListener(e -> viewAllSettings());
         buttonPanel.add(viewSettingsBtn);
 
         maintenanceBtn = new JButton("⚠️ Chế độ bảo trì");
-        maintenanceBtn.setBackground(new Color(255, 140, 0));
-        maintenanceBtn.setForeground(Color.WHITE);
+        maintenanceBtn.setBackground(ThemeColors.WARNING);
+        maintenanceBtn.setForeground(ThemeColors.TEXT_PRIMARY);
         maintenanceBtn.addActionListener(e -> toggleMaintenance());
         buttonPanel.add(maintenanceBtn);
 
         editSettingsBtn = new JButton("✏️ Sửa cài đặt");
-        editSettingsBtn.setBackground(new Color(34, 139, 34));
-        editSettingsBtn.setForeground(Color.WHITE);
+        editSettingsBtn.setBackground(ThemeColors.SUCCESS);
+        editSettingsBtn.setForeground(ThemeColors.TEXT_PRIMARY);
         editSettingsBtn.addActionListener(e -> editSetting());
         buttonPanel.add(editSettingsBtn);
 
         resetBtn = new JButton("Reset về mặc định");
-        resetBtn.setBackground(new Color(200, 16, 46));
-        resetBtn.setForeground(Color.WHITE);
+        resetBtn.setBackground(ThemeColors.DANGER);
+        resetBtn.setForeground(ThemeColors.TEXT_PRIMARY);
         resetBtn.addActionListener(e -> resetSettings());
         buttonPanel.add(resetBtn);
 
@@ -138,8 +138,8 @@ public class SystemSettingsView extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
 
         viewLogsBtn = new JButton("📖 Xem nhật ký (50 dòng)");
-        viewLogsBtn.setBackground(new Color(70, 130, 180));
-        viewLogsBtn.setForeground(Color.WHITE);
+        viewLogsBtn.setBackground(ThemeColors.PRIMARY);
+        viewLogsBtn.setForeground(ThemeColors.TEXT_PRIMARY);
         viewLogsBtn.addActionListener(e -> viewLogs());
         buttonPanel.add(viewLogsBtn);
 
@@ -171,8 +171,8 @@ public class SystemSettingsView extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
 
         viewStatsBtn = new JButton("📈 Xem thống kê hệ thống");
-        viewStatsBtn.setBackground(new Color(34, 139, 34));
-        viewStatsBtn.setForeground(Color.WHITE);
+        viewStatsBtn.setBackground(ThemeColors.SUCCESS);
+        viewStatsBtn.setForeground(ThemeColors.TEXT_PRIMARY);
         viewStatsBtn.addActionListener(e -> viewStats());
         buttonPanel.add(viewStatsBtn);
 
@@ -201,7 +201,7 @@ public class SystemSettingsView extends JPanel {
         
         statusLabel = new JLabel("Sẵn sàng");
         statusLabel.setFont(new Font("Arial", Font.ITALIC, 12));
-        statusLabel.setForeground(new Color(100, 100, 100));
+        statusLabel.setForeground(ThemeColors.TEXT_SECONDARY);
         panel.add(statusLabel, BorderLayout.WEST);
 
         return panel;
