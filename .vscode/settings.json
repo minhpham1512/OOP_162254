@@ -1,0 +1,7 @@
+{
+    "java.project.sourcePaths": ["QuanLyNganHang/src"],
+    "java.project.outputPath": "QuanLyNganHang/bin",
+    "java.project.referencedLibraries": [
+        "QuanLyNganHang/lib/**/*.jar"
+    ]
+}
