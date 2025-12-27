@@ -10,28 +10,20 @@ import java.util.List;
 import java.util.UUID;
 import javax.swing.*;
 
-/**
- * Lớp BankNap - Giao diện nạp tiền vào tài khoản
- * Cho phép người dùng:
- * - Xem danh sách tài khoản
- * - Chọn phương thức nạp tiền
- * - Nạp tiền vào tài khoản
- * - Xem lịch sử nạp tiền
- */
 public class BankNap extends JPanel {
 
     private DatabaseSimulator db;
     private User currentUser;
 
-    // Các thành phần UI
-    private JComboBox<String> accountCombo;
+    // --- CÁC THÀNH PHẦN UI ĐÃ SỬA ---
+    private JLabel accountLabel;        // Thay cho JComboBox
+    private JLabel currentBalanceLabel;
     private JTextField amountField;
-    private JComboBox<String> paymentMethodCombo;
-    private JTextField bankNameField;
     private JTextField transactionRefField;
     private JTextArea depositHistoryArea;
-    private JLabel currentBalanceLabel;
-    private DefaultComboBoxModel<String> accountModel;
+    
+    // Biến lưu ID tài khoản đang chọn (vì không còn ComboBox để getSelectedItem)
+    private String currentAccountId = null; 
 
     public BankNap(DatabaseSimulator db, User currentUser, AccountService accountService) {
         this.db = db;
@@ -44,365 +36,239 @@ public class BankNap extends JPanel {
         add(createMainContent(), BorderLayout.CENTER);
         add(createFooterPanel(), BorderLayout.SOUTH);
 
-        refreshAccountList();
+        // Khởi tạo dữ liệu
+        loadAccountData();
     }
 
-    /**
-     * Tạo panel tiêu đề
-     */
     private JPanel createHeaderPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel.setBackground(ThemeColors.PRIMARY);
-
         JLabel titleLabel = new JLabel("NẠP TIỀN VÀO TÀI KHOẢN");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         titleLabel.setForeground(ThemeColors.TEXT_PRIMARY);
         panel.add(titleLabel);
-
         return panel;
     }
 
-    /**
-     * Tạo nội dung chính (gồm 2 phần: form nạp tiền và lịch sử)
-     */
     private JPanel createMainContent() {
         JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
-        panel.setBackground(ThemeColors.BG_DARK);
-
-        // Phần trái: Form nạp tiền
         panel.add(createDepositFormPanel());
-
-        // Phần phải: Lịch sử nạp tiền
         panel.add(createDepositHistoryPanel());
-
         return panel;
     }
 
-    /**
-     * Tạo panel form nạp tiền
-     */
     private JPanel createDepositFormPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBackground(ThemeColors.BG_LIGHT);
         panel.setBorder(BorderFactory.createTitledBorder("THÔNG TIN NẠP TIỀN"));
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(10, 5, 10, 5); // Tăng khoảng cách cho thoáng
         gbc.anchor = GridBagConstraints.WEST;
 
-        // Số dư hiện tại
-        gbc.gridx = 0;
-        gbc.gridy = 0;
+        // 1. Số dư hiện tại
+        gbc.gridx = 0; gbc.gridy = 0;
         panel.add(new JLabel("Số dư hiện tại:"), gbc);
+        
         gbc.gridx = 1;
         currentBalanceLabel = new JLabel("0.00 VND");
-        currentBalanceLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        currentBalanceLabel.setFont(new Font("Arial", Font.BOLD, 14)); // Chữ to hơn chút
         currentBalanceLabel.setForeground(ThemeColors.SUCCESS);
         panel.add(currentBalanceLabel, gbc);
 
-        // Chọn tài khoản
-        gbc.gridx = 0;
-        gbc.gridy = 1;
+        // 2. Tài khoản (SỬA: Chuyển từ List sang Label tĩnh)
+        gbc.gridx = 0; gbc.gridy = 1;
         panel.add(new JLabel("Tài khoản:"), gbc);
+        
         gbc.gridx = 1;
-        accountModel = new DefaultComboBoxModel<>();
-        accountCombo = new JComboBox<>(accountModel);
-        accountCombo.addActionListener(e -> updateCurrentBalance());
-        panel.add(accountCombo, gbc);
+        accountLabel = new JLabel("Đang tải...");
+        accountLabel.setFont(new Font("Arial", Font.BOLD, 13));
+        panel.add(accountLabel, gbc);
 
-        // Phương thức nạp tiền
-        gbc.gridx = 0;
-        gbc.gridy = 2;
+        // 3. Phương thức (SỬA: Chuyển từ List sang Label tĩnh)
+        gbc.gridx = 0; gbc.gridy = 2;
         panel.add(new JLabel("Phương thức:"), gbc);
+        
         gbc.gridx = 1;
-        paymentMethodCombo = new JComboBox<>(new String[]{
-            "Chuyển khoản ngân hàng",
-            "Thẻ tín dụng",
-            "Tiền mặt tại quầy",
-            "Ví điện tử",
-            "Chuyển tiền qua điện thoại"
-        });
-        paymentMethodCombo.addActionListener(e -> updateFormFields());
-        panel.add(paymentMethodCombo, gbc);
+        JLabel methodLabel = new JLabel("Nạp tiền vào tài khoản"); // Giá trị cố định
+        methodLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+        panel.add(methodLabel, gbc);
 
-        // Số tiền nạp
-        gbc.gridx = 0;
-        gbc.gridy = 3;
+        // 4. Số tiền nạp
+        gbc.gridx = 0; gbc.gridy = 3;
         panel.add(new JLabel("Số tiền nạp (VND):"), gbc);
+        
         gbc.gridx = 1;
         amountField = new JTextField(20);
         panel.add(amountField, gbc);
 
-        // Tên ngân hàng (hiển thị tùy theo phương thức)
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        panel.add(new JLabel("Tên ngân hàng:"), gbc);
-        gbc.gridx = 1;
-        bankNameField = new JTextField(20);
-        bankNameField.setVisible(false);
-        panel.add(bankNameField, gbc);
+        // --- ĐÃ XÓA PHẦN TÊN NGÂN HÀNG Ở ĐÂY ---
 
-        // Mã tham chiếu giao dịch
-        gbc.gridx = 0;
-        gbc.gridy = 5;
+        // 5. Mã tham chiếu
+        gbc.gridx = 0; gbc.gridy = 4; // Index y giảm xuống do xóa bankName
         panel.add(new JLabel("Mã tham chiếu (nếu có):"), gbc);
+        
         gbc.gridx = 1;
         transactionRefField = new JTextField(20);
         panel.add(transactionRefField, gbc);
 
-        // Nút nạp tiền
-        gbc.gridx = 0;
-        gbc.gridy = 6;
+        // 6. Nút nạp tiền
+        gbc.gridx = 0; gbc.gridy = 5;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         JButton depositButton = new JButton("Nạp tiền");
         depositButton.setBackground(ThemeColors.SUCCESS);
         depositButton.setForeground(ThemeColors.TEXT_PRIMARY);
-        depositButton.setFont(new Font("Arial", Font.BOLD, 12));
+        depositButton.setFont(new Font("Arial", Font.BOLD, 14));
+        // Tăng kích thước nút
+        depositButton.setPreferredSize(new Dimension(150, 35)); 
         panel.add(depositButton, gbc);
 
-        // Xử lý sự kiện nút nạp tiền
         depositButton.addActionListener(e -> processDeposit());
 
         return panel;
     }
 
-    /**
-     * Tạo panel lịch sử nạp tiền
-     */
     private JPanel createDepositHistoryPanel() {
+        // ... (Giữ nguyên như code cũ) ...
         JPanel panel = new JPanel(new BorderLayout(5, 5));
         panel.setBackground(ThemeColors.BG_LIGHT);
         panel.setBorder(BorderFactory.createTitledBorder("LỊCH SỬ NẠP TIỀN"));
 
         depositHistoryArea = new JTextArea(10, 30);
-        depositHistoryArea.setBackground(ThemeColors.BG_DARKER);
-        depositHistoryArea.setForeground(ThemeColors.TEXT_PRIMARY);
         depositHistoryArea.setEditable(false);
-        depositHistoryArea.setFont(new Font("Monospaced", Font.PLAIN, 10));
-        JScrollPane scrollPane = new JScrollPane(depositHistoryArea);
-        panel.add(scrollPane, BorderLayout.CENTER);
+        depositHistoryArea.setFont(new Font("Monospaced", Font.PLAIN, 11));
+        panel.add(new JScrollPane(depositHistoryArea), BorderLayout.CENTER);
 
-        // Panel nút
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        buttonPanel.setBackground(ThemeColors.BG_LIGHT);
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton refreshButton = new JButton("Làm mới");
-        JButton exportButton = new JButton("Xuất báo cáo");
         buttonPanel.add(refreshButton);
-        buttonPanel.add(exportButton);
         panel.add(buttonPanel, BorderLayout.SOUTH);
 
-        // Xử lý sự kiện
         refreshButton.addActionListener(e -> refreshDepositHistory());
-        exportButton.addActionListener(e -> JOptionPane.showMessageDialog(this, 
-            "Chức năng xuất báo cáo sẽ được cập nhật sớm!",
-            "Thông báo", JOptionPane.INFORMATION_MESSAGE));
-
         return panel;
     }
 
-    /**
-     * Tạo panel chân trang
-     */
     private JPanel createFooterPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        JTextArea infoArea = new JTextArea(3, 50);
-        infoArea.setEditable(false);
-        infoArea.setLineWrap(true);
-        infoArea.setWrapStyleWord(true);
-        infoArea.setText("Thông tin: Gửi tiền nhanh chóng và an toàn. " +
-                        "Tiền sẽ được cộng vào tài khoản trong vòng 2-24 giờ tùy phương thức. " +
-                        "Phí nạp tiền (nếu có) sẽ được thông báo trong quá trình xử lý.");
-        infoArea.setBackground(ThemeColors.BG_LIGHT);
-        infoArea.setForeground(ThemeColors.TEXT_PRIMARY);
-        JScrollPane scrollPane = new JScrollPane(infoArea);
-        panel.add(scrollPane, BorderLayout.CENTER);
+        // ... (Giữ nguyên hoặc rút gọn text) ...
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel infoLabel = new JLabel("Lưu ý: Tiền sẽ được cộng ngay lập tức vào tài khoản sau khi xác nhận.");
+        infoLabel.setFont(new Font("Arial", Font.ITALIC, 11));
+        panel.add(infoLabel);
         return panel;
     }
 
     /**
-     * Cập nhật danh sách tài khoản
+     * Logic mới: Tự động lấy tài khoản đầu tiên và hiển thị lên Label
      */
-    private void refreshAccountList() {
-        accountModel.removeAllElements();
+    private void loadAccountData() {
         try {
             List<String> accountIds = currentUser.getAccountIds();
             if (accountIds.isEmpty()) {
-                accountModel.addElement("Chưa có tài khoản");
+                accountLabel.setText("Chưa có tài khoản");
                 currentBalanceLabel.setText("0.00 VND");
+                currentAccountId = null;
                 return;
             }
 
-            for (String accountId : accountIds) {
-                try {
-                    Account account = db.findAccountById(accountId);
-                    if (account != null) {
-                        String displayText = String.format("%s (%.2f VND)", accountId, account.getBalance());
-                        accountModel.addElement(displayText);
-                    }
-                } catch (Exception ex) {
-                    // Bỏ qua tài khoản lỗi
-                }
-            }
+            // Lấy tài khoản đầu tiên mặc định
+            currentAccountId = accountIds.get(0); 
+            
+            updateAccountDisplay();
+            refreshDepositHistory();
 
-            if (accountModel.getSize() > 0) {
-                accountCombo.setSelectedIndex(0);
-                updateCurrentBalance();
-            }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage(),
-                                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Lỗi tải dữ liệu: " + ex.getMessage());
         }
     }
 
-    /**
-     * Cập nhật số dư hiện tại
-     */
-    private void updateCurrentBalance() {
+    private void updateAccountDisplay() {
+        if (currentAccountId == null) return;
+        
         try {
-            String selectedText = (String) accountCombo.getSelectedItem();
-            if (selectedText == null || selectedText.contains("Chưa có")) {
-                currentBalanceLabel.setText("0.00 VND");
-                return;
-            }
-
-            String accountId = selectedText.split(" \\(")[0];
-            Account account = db.findAccountById(accountId);
+            Account account = db.findAccountById(currentAccountId);
             if (account != null) {
+                // Hiển thị dạng: ACC001 (Chủ TK: Nguyen Van A)
+                accountLabel.setText(String.format("%s (Chủ TK: %s)", 
+                        currentAccountId, currentUser.getFullName()));
                 currentBalanceLabel.setText(String.format("%.2f VND", account.getBalance()));
             }
-        } catch (Exception ex) {
-            currentBalanceLabel.setText("Lỗi");
+        } catch (Exception e) {
+            accountLabel.setText("Lỗi hiển thị");
         }
     }
 
-    /**
-     * Cập nhật trạng thái các trường nhập liệu tùy theo phương thức
-     */
-    private void updateFormFields() {
-        String method = (String) paymentMethodCombo.getSelectedItem();
-        bankNameField.setVisible(method.equals("Chuyển khoản ngân hàng"));
-    }
-
-    /**
-     * Xử lý nạp tiền
-     */
     private void processDeposit() {
+        if (currentAccountId == null) {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy tài khoản để nạp!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         try {
-            // Kiểm tra dữ liệu đầu vào
             if (amountField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Vui lòng nhập số tiền!",
-                                            "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập số tiền!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             double amount = Double.parseDouble(amountField.getText());
             if (amount <= 0) {
-                JOptionPane.showMessageDialog(this, "Số tiền phải lớn hơn 0!",
-                                            "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Số tiền phải lớn hơn 0!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Kiểm tra giới hạn nạp tiền
-            if (amount > 1_000_000_000) {
-                JOptionPane.showMessageDialog(this, "Số tiền nạp vượt quá giới hạn cho phép!",
-                                            "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return;
+            // Logic nạp tiền
+            Account account = db.findAccountById(currentAccountId);
+            if (account != null) {
+                double oldBalance = account.getBalance();
+                account.deposit(amount);
+                db.saveAccount(account);
+
+                // Lưu lịch sử
+                String txId = "DEP" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+                String ref = transactionRefField.getText();
+                String content = "Nạp tiền vào tài khoản" + (ref.isEmpty() ? "" : " | Ref: " + ref);
+                
+                Transaction tx = new Transaction(txId, amount, content, 
+                        Transaction.TransactionType.DEPOSIT, currentAccountId, null);
+                db.saveTransaction(tx);
+
+                // Thông báo
+                JOptionPane.showMessageDialog(this, 
+                    String.format("Nạp thành công!\nSố dư mới: %.2f VND", account.getBalance()), 
+                    "Thành công", JOptionPane.INFORMATION_MESSAGE);
+
+                // Reset form
+                amountField.setText("");
+                transactionRefField.setText("");
+                updateAccountDisplay(); // Cập nhật lại số dư trên màn hình
+                refreshDepositHistory(); // Cập nhật log
             }
-
-            String selectedText = (String) accountCombo.getSelectedItem();
-            String accountId = selectedText.split(" \\(")[0];
-            String paymentMethod = (String) paymentMethodCombo.getSelectedItem();
-            String bankName = bankNameField.getText();
-            String transactionRef = transactionRefField.getText();
-
-            // Nạp tiền vào tài khoản
-            Account account = db.findAccountById(accountId);
-            if (account == null) {
-                throw new Exception("Tài khoản không tồn tại!");
-            }
-
-            double oldBalance = account.getBalance();
-            account.deposit(amount);
-            db.saveAccount(account);
-
-            // Tạo ghi chép giao dịch
-            String txId = "DEP" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-            String depositNote = String.format("Nạp tiền qua %s | Tham chiếu: %s | Ngân hàng: %s",
-                                              paymentMethod, 
-                                              transactionRef.isEmpty() ? "N/A" : transactionRef,
-                                              bankName.isEmpty() ? "N/A" : bankName);
-            Transaction tx = new Transaction(txId, amount, depositNote,
-                                           Transaction.TransactionType.DEPOSIT, accountId, null);
-            db.saveTransaction(tx);
-
-            // Hiển thị thông báo thành công
-            JOptionPane.showMessageDialog(this,
-                                        String.format("Nạp tiền thành công!\n" +
-                                                    "Số tiền: %.2f VND\n" +
-                                                    "Số dư cũ: %.2f VND\n" +
-                                                    "Số dư mới: %.2f VND\n" +
-                                                    "Mã giao dịch: %s",
-                                                    amount, oldBalance, account.getBalance(), txId),
-                                        "Thành công", JOptionPane.INFORMATION_MESSAGE);
-
-            // Xóa form và cập nhật
-            amountField.setText("");
-            bankNameField.setText("");
-            transactionRefField.setText("");
-            updateCurrentBalance();
-            refreshDepositHistory();
 
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Số tiền không hợp lệ!",
-                                        "Lỗi Dữ liệu", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số tiền không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage(),
-                                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Lỗi hệ thống: " + ex.getMessage());
         }
     }
 
-    /**
-     * Làm mới lịch sử nạp tiền
-     */
     private void refreshDepositHistory() {
+        // ... (Logic tương tự code cũ, dùng currentAccountId để query) ...
         depositHistoryArea.setText("");
+        if (currentAccountId == null) return;
+
         try {
-            String selectedText = (String) accountCombo.getSelectedItem();
-            if (selectedText == null || selectedText.contains("Chưa có")) {
-                depositHistoryArea.append("Chưa có giao dịch nạp tiền");
-                return;
-            }
-
-            String accountId = selectedText.split(" \\(")[0];
-            List<Transaction> allTransactions = db.findTransactionsByAccountId(accountId);
-
-            if (allTransactions.isEmpty()) {
-                depositHistoryArea.append("Chưa có giao dịch nạp tiền");
-                return;
-            }
-
-            depositHistoryArea.append("STT | Mã GD | Loại | Số tiền | Nội dung\n");
-            depositHistoryArea.append("----+-------+------+----------+----------------------------\n");
-
-            int count = 0;
-            for (Transaction tx : allTransactions) {
+            var transactions = db.findTransactionsByAccountId(currentAccountId);
+            depositHistoryArea.append("Mã GD   | Số tiền      | Nội dung\n");
+            depositHistoryArea.append("--------+--------------+-------------------\n");
+            
+            for (Transaction tx : transactions) {
                 if (tx.getType() == Transaction.TransactionType.DEPOSIT) {
-                    count++;
-                    depositHistoryArea.append(String.format("%2d | %s | %s | %9.2f | %s\n",
-                                                           count,
-                                                           tx.getTransactionId(),
-                                                           tx.getType().toString(),
-                                                           tx.getAmount(),
-                                                           tx.getContent()));
+                    depositHistoryArea.append(String.format("%-7s | %10.0f   | %s\n", 
+                        tx.getTransactionId(), tx.getAmount(), tx.getContent()));
                 }
             }
-
-            if (count == 0) {
-                depositHistoryArea.setText("Chưa có giao dịch nạp tiền nào");
-            }
-
-        } catch (Exception ex) {
-            depositHistoryArea.append("Lỗi: " + ex.getMessage());
+        } catch (Exception e) {
+            depositHistoryArea.setText("Lỗi tải lịch sử.");
         }
     }
 }

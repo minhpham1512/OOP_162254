@@ -665,7 +665,7 @@ public class BankGUI extends JFrame {
         System.out.println("Dữ liệu mẫu đã được nạp.");
         System.out.println("\n========== HƯỚNG DẪN ĐĂNG NHẬP ==========");
         System.out.println("👤 Tài khoản ADMIN:");
-        System.out.println("   Email: admin@bank.com");
+        System.out.println("   Email: admin@gmail.com");
         System.out.println("   Mật khẩu: admin");
         System.out.println("\n👤 Tài khoản KHÁCH HÀNG:");
         System.out.println("   Email: alice@bank.com / Mật khẩu: 123");
