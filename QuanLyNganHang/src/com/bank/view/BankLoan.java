@@ -8,6 +8,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.UUID;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * Lớp giao diện quản lý chức năng VAY TIỀN (Loan Management)
@@ -16,6 +17,9 @@ import javax.swing.*;
  * - Tạo đơn vay mới
  * - Thanh toán khoản vay
  * - Xem chi tiết khoản vay
+ * Admin có thể:
+ * - Duyệt/từ chối khoản vay
+ * - Xem toàn bộ danh sách khoản vay
  */
 public class BankLoan extends JPanel {
 
@@ -31,6 +35,11 @@ public class BankLoan extends JPanel {
     private JTextField termMonthsField;
     private JList<String> activeLoansList;
     private DefaultListModel<String> loansListModel;
+    
+    // Admin components
+    private JTable pendingLoansTable;
+    private DefaultTableModel pendingTableModel;
+    private JPanel adminPanel;
 
     public BankLoan(DatabaseSimulator db, User currentUser, AccountService accountService) {
         this.db = db;
@@ -43,11 +52,315 @@ public class BankLoan extends JPanel {
 
         // Thêm các thành phần
         add(createHeaderPanel(), BorderLayout.NORTH);
-        add(createMainContent(), BorderLayout.CENTER);
+        
+        // Nếu là Admin, hiển thị panel duyệt khoản vay
+        if (currentUser.getRole() == User.UserRole.ADMIN) {
+            add(createAdminPanel(), BorderLayout.CENTER);
+        } else {
+            add(createMainContent(), BorderLayout.CENTER);
+        }
+        
         add(createFooterPanel(), BorderLayout.SOUTH);
 
         // Cập nhật danh sách vay
         refreshLoanList();
+    }
+
+    /**
+     * Tạo panel dành cho Admin - duyệt khoản vay
+     */
+    private JPanel createAdminPanel() {
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBackground(ThemeColors.BG_DARK);
+
+        // Phần trên: Danh sách khoản vay chờ duyệt
+        panel.add(createPendingLoansPanel(), BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    /**
+     * Tạo panel danh sách khoản vay chờ duyệt cho Admin
+     */
+    private JPanel createPendingLoansPanel() {
+        JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.setBackground(ThemeColors.BG_LIGHT);
+        panel.setBorder(BorderFactory.createTitledBorder("DANH SÁCH KHOẢN VAY CHỜ DUYỆT"));
+
+        // Tạo bảng
+        pendingTableModel = new DefaultTableModel(new Object[]{
+            "Mã Vay", "Khách Hàng", "Loại Vay", "Số Tiền (VND)", "Lãi Suất (%)", "Kỳ Hạn (tháng)", "Trạng Thái"
+        }, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        pendingLoansTable = new JTable(pendingTableModel);
+        pendingLoansTable.setBackground(ThemeColors.BG_DARKER);
+        pendingLoansTable.setForeground(ThemeColors.TEXT_PRIMARY);
+        pendingLoansTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollPane = new JScrollPane(pendingLoansTable);
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        // Panel nút
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        buttonPanel.setBackground(ThemeColors.BG_LIGHT);
+
+        JButton approveButton = new JButton("✓ Duyệt");
+        approveButton.setBackground(ThemeColors.SUCCESS);
+        approveButton.setForeground(ThemeColors.TEXT_PRIMARY);
+        approveButton.setFont(new Font("Arial", Font.BOLD, 12));
+
+        JButton rejectButton = new JButton("✗ Từ Chối");
+        rejectButton.setBackground(new Color(220, 20, 60));
+        rejectButton.setForeground(ThemeColors.TEXT_PRIMARY);
+        rejectButton.setFont(new Font("Arial", Font.BOLD, 12));
+
+        JButton viewDetailsButton = new JButton("Chi Tiết");
+        viewDetailsButton.setForeground(ThemeColors.TEXT_PRIMARY);
+        viewDetailsButton.setFont(new Font("Arial", Font.BOLD, 12));
+
+        JButton refreshButton = new JButton("Làm Mới");
+        refreshButton.setForeground(ThemeColors.TEXT_PRIMARY);
+        refreshButton.setFont(new Font("Arial", Font.BOLD, 12));
+
+        buttonPanel.add(approveButton);
+        buttonPanel.add(rejectButton);
+        buttonPanel.add(viewDetailsButton);
+        buttonPanel.add(refreshButton);
+
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Xử lý sự kiện nút Duyệt
+        approveButton.addActionListener(e -> approveLoan());
+
+        // Xử lý sự kiện nút Từ Chối
+        rejectButton.addActionListener(e -> rejectLoan());
+
+        // Xử lý sự kiện nút Chi Tiết
+        viewDetailsButton.addActionListener(e -> showAdminLoanDetail());
+
+        // Xử lý sự kiện nút Làm Mới
+        refreshButton.addActionListener(e -> refreshAdminLoanList());
+
+        return panel;
+    }
+
+    /**
+     * Duyệt khoản vay
+     */
+    private void approveLoan() {
+        int selectedRow = pendingLoansTable.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một khoản vay để duyệt!",
+                                        "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            String loanId = (String) pendingTableModel.getValueAt(selectedRow, 0);
+            List<Loan> allLoans = db.getAllLoans();
+            
+            Loan loanToApprove = null;
+            for (Loan loan : allLoans) {
+                if (loan.getLoanId().equals(loanId)) {
+                    loanToApprove = loan;
+                    break;
+                }
+            }
+
+            if (loanToApprove == null) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy khoản vay!",
+                                            "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Cập nhật trạng thái
+            loanToApprove.setStatus(Loan.LoanStatus.ACTIVE);
+            db.saveLoan(loanToApprove);
+
+            JOptionPane.showMessageDialog(this,
+                                        String.format("✓ Đã duyệt khoản vay!\n" +
+                                                     "Mã vay: %s\n" +
+                                                     "Khách hàng: %s\n" +
+                                                     "Số tiền: %.2f VND\n" +
+                                                     "Trạng thái: ACTIVE",
+                                                     loanId,
+                                                     loanToApprove.getCustomerId(),
+                                                     loanToApprove.getAmount()),
+                                        "Duyệt Thành Công", JOptionPane.INFORMATION_MESSAGE);
+
+            refreshAdminLoanList();
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage(),
+                                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Từ chối khoản vay
+     */
+    private void rejectLoan() {
+        int selectedRow = pendingLoansTable.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một khoản vay để từ chối!",
+                                        "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            String reasonInput = JOptionPane.showInputDialog(this,
+                                                            "Nhập lý do từ chối:",
+                                                            "");
+            if (reasonInput == null) {
+                return; // Người dùng hủy
+            }
+
+            String loanId = (String) pendingTableModel.getValueAt(selectedRow, 0);
+            List<Loan> allLoans = db.getAllLoans();
+            
+            Loan loanToReject = null;
+            for (Loan loan : allLoans) {
+                if (loan.getLoanId().equals(loanId)) {
+                    loanToReject = loan;
+                    break;
+                }
+            }
+
+            if (loanToReject == null) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy khoản vay!",
+                                            "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Xóa khoản vay (hoặc có thể thêm trạng thái REJECTED)
+            db.deleteLoan(loanId);
+
+            JOptionPane.showMessageDialog(this,
+                                        String.format("✗ Đã từ chối khoản vay!\n" +
+                                                     "Mã vay: %s\n" +
+                                                     "Khách hàng: %s\n" +
+                                                     "Lý do: %s",
+                                                     loanId,
+                                                     loanToReject.getCustomerId(),
+                                                     reasonInput),
+                                        "Từ Chối Thành Công", JOptionPane.INFORMATION_MESSAGE);
+
+            refreshAdminLoanList();
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage(),
+                                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Hiển thị chi tiết khoản vay cho Admin
+     */
+    private void showAdminLoanDetail() {
+        int selectedRow = pendingLoansTable.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một khoản vay!",
+                                        "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            String loanId = (String) pendingTableModel.getValueAt(selectedRow, 0);
+            List<Loan> allLoans = db.getAllLoans();
+            
+            Loan selectedLoan = null;
+            for (Loan loan : allLoans) {
+                if (loan.getLoanId().equals(loanId)) {
+                    selectedLoan = loan;
+                    break;
+                }
+            }
+
+            if (selectedLoan == null) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy khoản vay!",
+                                            "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Tính lãi phải trả
+            double totalInterest = selectedLoan.getAmount() * selectedLoan.getInterestRate() / 100 *
+                                 (selectedLoan.getTermMonths() / 12.0);
+            double monthlyPayment = (selectedLoan.getAmount() + totalInterest) / selectedLoan.getTermMonths();
+
+            String detail = String.format(
+                "=== CHI TIẾT KHOẢN VAY ===\n" +
+                "Mã vay: %s\n" +
+                "Khách hàng: %s\n" +
+                "Loại vay: %s\n" +
+                "Số tiền vay: %.2f VND\n" +
+                "Lãi suất: %.2f %%/năm\n" +
+                "Kỳ hạn: %d tháng\n" +
+                "Tổng lãi phải trả: %.2f VND\n" +
+                "Thanh toán hàng tháng: %.2f VND\n" +
+                "Tổng tiền phải trả: %.2f VND\n" +
+                "Ngày bắt đầu: %s\n" +
+                "Ngày đáo hạn: %s\n" +
+                "Trạng thái: %s",
+                selectedLoan.getLoanId(),
+                selectedLoan.getCustomerId(),
+                selectedLoan.getLoanType(),
+                selectedLoan.getAmount(),
+                selectedLoan.getInterestRate(),
+                selectedLoan.getTermMonths(),
+                totalInterest,
+                monthlyPayment,
+                selectedLoan.getAmount() + totalInterest,
+                selectedLoan.getStartDate(),
+                selectedLoan.getMaturityDate(),
+                selectedLoan.getStatus().toString()
+            );
+
+            JOptionPane.showMessageDialog(this, detail, "Chi tiết khoản vay", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage(),
+                                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Làm mới danh sách khoản vay chờ duyệt cho Admin
+     */
+    private void refreshAdminLoanList() {
+        pendingTableModel.setRowCount(0);
+
+        try {
+            List<Loan> allLoans = db.getAllLoans();
+
+            for (Loan loan : allLoans) {
+                // Chỉ hiển thị các khoản vay chờ duyệt
+                if (loan.getStatus() == Loan.LoanStatus.PENDING) {
+                    pendingTableModel.addRow(new Object[]{
+                        loan.getLoanId(),
+                        loan.getCustomerId(),
+                        loan.getLoanType(),
+                        String.format("%.2f", loan.getAmount()),
+                        String.format("%.2f", loan.getInterestRate()),
+                        loan.getTermMonths(),
+                        loan.getStatus().toString()
+                    });
+                }
+            }
+
+            if (pendingTableModel.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this,
+                                            "Không có khoản vay nào chờ duyệt!",
+                                            "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage(),
+                                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -57,7 +370,8 @@ public class BankLoan extends JPanel {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel.setBackground(ThemeColors.PRIMARY);
         
-        JLabel titleLabel = new JLabel("QUẢN LÝ KHOẢN VAY TIỀN");
+        JLabel titleLabel = new JLabel(currentUser.getRole() == User.UserRole.ADMIN ? 
+                                      "QUẢN LÝ DUYỆT KHOẢN VAY" : "QUẢN LÝ KHOẢN VAY TIỀN");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         titleLabel.setForeground(ThemeColors.TEXT_PRIMARY);
         panel.add(titleLabel);
@@ -269,6 +583,12 @@ public class BankLoan extends JPanel {
      * Làm mới danh sách khoản vay
      */
     private void refreshLoanList() {
+        // Nếu là Admin, dùng refreshAdminLoanList
+        if (currentUser.getRole() == User.UserRole.ADMIN) {
+            refreshAdminLoanList();
+            return;
+        }
+
         loansListModel.clear();
         
         try {

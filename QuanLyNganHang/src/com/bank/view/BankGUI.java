@@ -582,6 +582,10 @@ public class BankGUI extends JFrame {
                 AdminDashboard adminDashboard = new AdminDashboard(db, currentUser, accountService);
                 tabbedPane.addTab("Bảng điều khiển", adminDashboard);
                 
+                // Admin có thể duyệt khoản vay
+                bankLoanPanel = new BankLoan(db, currentUser, accountService);
+                tabbedPane.addTab("Duyệt vay tiền", bankLoanPanel);
+                
                 ReportView reportView = new ReportView(db, currentUser);
                 tabbedPane.addTab("Xuất báo cáo", reportView);
                 

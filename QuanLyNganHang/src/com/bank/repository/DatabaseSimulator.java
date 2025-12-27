@@ -107,8 +107,13 @@ public class DatabaseSimulator {
             .filter(l -> l.getCustomerId().equals(customerId))
             .collect(Collectors.toList());
     }
+    public List<Loan> getAllLoans() {
+        return new ArrayList<>(loans.values());
+    }
+    public void deleteLoan(String loanId) {
+        loans.remove(loanId);
+    }
     
-    // --- Savings Methods ---
     public void saveSavingsAccount(SavingsAccount sa) {
         savingsAccounts.put(sa.getSavingsId(), sa);
     }
