@@ -607,6 +607,10 @@ public class BankGUI extends JFrame {
                 CreditCardManagement creditCardPanel = new CreditCardManagement(db, currentUser, accountService);
                 tabbedPane.addTab("Thẻ tín dụng", creditCardPanel);
                 
+                // Thêm tab Quản lý tài khoản
+                BankAccountManagement accountManagement = new BankAccountManagement(db, currentUser, accountService);
+                tabbedPane.addTab("Quản lý tài khoản", accountManagement);
+                
                 // Thêm tab lịch sử giao dịch
                 tabbedPane.addTab("Lịch sử giao dịch", createHistoryPanel());
                 
