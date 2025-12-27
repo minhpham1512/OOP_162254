@@ -6,12 +6,11 @@ import com.bank.repository.DatabaseSimulator;
 import com.bank.service.CustomerAccountService;
 import com.bank.service.LocationData;
 import com.bank.service.UserService;
-
-import javax.swing.*;
 import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.*;
 
 /**
  * Lớp CustomerRegistrationView - Giao diện đăng ký khách hàng mới
@@ -70,6 +69,7 @@ public class CustomerRegistrationView extends JPanel {
      */
     private JPanel createFormPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBackground(ThemeColors.BG_DARK);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.WEST;
@@ -77,48 +77,70 @@ public class CustomerRegistrationView extends JPanel {
         // Họ tên
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel.add(new JLabel("Họ tên:"), gbc);
+        JLabel label1 = new JLabel("Họ tên:");
+        label1.setForeground(ThemeColors.TEXT_PRIMARY);
+        panel.add(label1, gbc);
         gbc.gridx = 1;
         fullNameField = new JTextField(25);
+        fullNameField.setBackground(ThemeColors.BG_LIGHT);
+        fullNameField.setForeground(ThemeColors.TEXT_PRIMARY);
         panel.add(fullNameField, gbc);
 
         // Ngày sinh
         gbc.gridx = 0;
         gbc.gridy = 1;
-        panel.add(new JLabel("Ngày sinh (dd/MM/yyyy):"), gbc);
+        JLabel label2 = new JLabel("Ngày sinh (dd/MM/yyyy):");
+        label2.setForeground(ThemeColors.TEXT_PRIMARY);
+        panel.add(label2, gbc);
         gbc.gridx = 1;
         dateOfBirthField = new JTextField(25);
         dateOfBirthField.setText("01/01/2000");
+        dateOfBirthField.setBackground(ThemeColors.BG_LIGHT);
+        dateOfBirthField.setForeground(ThemeColors.TEXT_PRIMARY);
         panel.add(dateOfBirthField, gbc);
 
         // CMND/CCCD
         gbc.gridx = 0;
         gbc.gridy = 2;
-        panel.add(new JLabel("CMND/CCCD:"), gbc);
+        JLabel label3 = new JLabel("CMND/CCCD:");
+        label3.setForeground(ThemeColors.TEXT_PRIMARY);
+        panel.add(label3, gbc);
         gbc.gridx = 1;
         idNumberField = new JTextField(25);
+        idNumberField.setBackground(ThemeColors.BG_LIGHT);
+        idNumberField.setForeground(ThemeColors.TEXT_PRIMARY);
         panel.add(idNumberField, gbc);
 
         // Số điện thoại
         gbc.gridx = 0;
         gbc.gridy = 3;
-        panel.add(new JLabel("Số điện thoại:"), gbc);
+        JLabel label4 = new JLabel("Số điện thoại:");
+        label4.setForeground(ThemeColors.TEXT_PRIMARY);
+        panel.add(label4, gbc);
         gbc.gridx = 1;
         phoneField = new JTextField(25);
+        phoneField.setBackground(ThemeColors.BG_LIGHT);
+        phoneField.setForeground(ThemeColors.TEXT_PRIMARY);
         panel.add(phoneField, gbc);
 
         // Email
         gbc.gridx = 0;
         gbc.gridy = 4;
-        panel.add(new JLabel("Email:"), gbc);
+        JLabel label5 = new JLabel("Email:");
+        label5.setForeground(ThemeColors.TEXT_PRIMARY);
+        panel.add(label5, gbc);
         gbc.gridx = 1;
         emailField = new JTextField(25);
+        emailField.setBackground(ThemeColors.BG_LIGHT);
+        emailField.setForeground(ThemeColors.TEXT_PRIMARY);
         panel.add(emailField, gbc);
 
         // Tỉnh/Thành phố
         gbc.gridx = 0;
         gbc.gridy = 5;
-        panel.add(new JLabel("Tỉnh/Thành phố:"), gbc);
+        JLabel label6 = new JLabel("Tỉnh/Thành phố:");
+        label6.setForeground(ThemeColors.TEXT_PRIMARY);
+        panel.add(label6, gbc);
         gbc.gridx = 1;
         provinceCombo = new JComboBox<>(LocationData.getProvinces().toArray(new String[0]));
         provinceCombo.addActionListener(e -> updateDistrictCombo());
@@ -127,7 +149,9 @@ public class CustomerRegistrationView extends JPanel {
         // Quận/Huyện
         gbc.gridx = 0;
         gbc.gridy = 6;
-        panel.add(new JLabel("Quận/Huyện:"), gbc);
+        JLabel label7 = new JLabel("Quận/Huyện:");
+        label7.setForeground(ThemeColors.TEXT_PRIMARY);
+        panel.add(label7, gbc);
         gbc.gridx = 1;
         districtCombo = new JComboBox<>();
         districtCombo.addActionListener(e -> updateWardCombo());
@@ -136,7 +160,9 @@ public class CustomerRegistrationView extends JPanel {
         // Phường/Xã
         gbc.gridx = 0;
         gbc.gridy = 7;
-        panel.add(new JLabel("Phường/Xã:"), gbc);
+        JLabel label8 = new JLabel("Phường/Xã:");
+        label8.setForeground(ThemeColors.TEXT_PRIMARY);
+        panel.add(label8, gbc);
         gbc.gridx = 1;
         wardCombo = new JComboBox<>();
         panel.add(wardCombo, gbc);
@@ -144,25 +170,37 @@ public class CustomerRegistrationView extends JPanel {
         // Chi tiết địa chỉ
         gbc.gridx = 0;
         gbc.gridy = 8;
-        panel.add(new JLabel("Chi tiết (số nhà, đường):"), gbc);
+        JLabel label9 = new JLabel("Chi tiết (số nhà, đường):");
+        label9.setForeground(ThemeColors.TEXT_PRIMARY);
+        panel.add(label9, gbc);
         gbc.gridx = 1;
         detailAddressField = new JTextField(25);
+        detailAddressField.setBackground(ThemeColors.BG_LIGHT);
+        detailAddressField.setForeground(ThemeColors.TEXT_PRIMARY);
         panel.add(detailAddressField, gbc);
 
         // Mật khẩu
         gbc.gridx = 0;
         gbc.gridy = 9;
-        panel.add(new JLabel("Mật khẩu:"), gbc);
+        JLabel label10 = new JLabel("Mật khẩu:");
+        label10.setForeground(ThemeColors.TEXT_PRIMARY);
+        panel.add(label10, gbc);
         gbc.gridx = 1;
         passwordField = new JPasswordField(25);
+        passwordField.setBackground(ThemeColors.BG_LIGHT);
+        passwordField.setForeground(ThemeColors.TEXT_PRIMARY);
         panel.add(passwordField, gbc);
 
         // Xác nhận mật khẩu
         gbc.gridx = 0;
         gbc.gridy = 10;
-        panel.add(new JLabel("Xác nhận mật khẩu:"), gbc);
+        JLabel label11 = new JLabel("Xác nhận mật khẩu:");
+        label11.setForeground(ThemeColors.TEXT_PRIMARY);
+        panel.add(label11, gbc);
         gbc.gridx = 1;
         confirmPasswordField = new JPasswordField(25);
+        confirmPasswordField.setBackground(ThemeColors.BG_LIGHT);
+        confirmPasswordField.setForeground(ThemeColors.TEXT_PRIMARY);
         panel.add(confirmPasswordField, gbc);
 
         // Nút Đăng ký

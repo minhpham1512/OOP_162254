@@ -439,7 +439,9 @@ public class BankGUI extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
         // Tiêu đề
-        mainPanel.add(UIUtils.createSubtitleLabel("Lịch sử giao dịch"), BorderLayout.NORTH);
+        JLabel titleLabel = UIUtils.createSubtitleLabel("Lịch sử giao dịch");
+        titleLabel.setForeground(ThemeColors.TEXT_PRIMARY);
+        mainPanel.add(titleLabel, BorderLayout.NORTH);
         
         JButton refreshButton = UIUtils.createStyledButton("Làm mới", ThemeColors.INFO, ThemeColors.TEXT_PRIMARY);
 
@@ -498,7 +500,9 @@ public class BankGUI extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
         // Tiêu đề
-        mainPanel.add(UIUtils.createSubtitleLabel("Chuyển tiền"), BorderLayout.NORTH);
+        JLabel titleLabel = UIUtils.createSubtitleLabel("Chuyển tiền");
+        titleLabel.setForeground(ThemeColors.TEXT_PRIMARY);
+        mainPanel.add(titleLabel, BorderLayout.NORTH);
         
         // Panel nội dung
         JPanel contentPanel = new JPanel(new GridBagLayout());
@@ -508,7 +512,9 @@ public class BankGUI extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         gbc.gridx = 0; gbc.gridy = 0;
-        contentPanel.add(new JLabel("Tài khoản nhận:"), gbc);
+        JLabel toAccLabel = new JLabel("Tài khoản nhận:");
+        toAccLabel.setForeground(ThemeColors.TEXT_PRIMARY);
+        contentPanel.add(toAccLabel, gbc);
         gbc.gridx = 1;
         JTextField toAccountField = new JTextField(20);
         toAccountField.setText("ACC002");
@@ -517,7 +523,9 @@ public class BankGUI extends JFrame {
         contentPanel.add(toAccountField, gbc);
 
         gbc.gridx = 0; gbc.gridy = 1;
-        contentPanel.add(new JLabel("Số tiền:"), gbc);
+        JLabel amountLabel = new JLabel("Số tiền:");
+        amountLabel.setForeground(ThemeColors.TEXT_PRIMARY);
+        contentPanel.add(amountLabel, gbc);
         gbc.gridx = 1;
         JTextField amountField = new JTextField(20);
         amountField.setBackground(ThemeColors.BG_LIGHT);
@@ -525,7 +533,9 @@ public class BankGUI extends JFrame {
         contentPanel.add(amountField, gbc);
 
         gbc.gridx = 0; gbc.gridy = 2;
-        contentPanel.add(new JLabel("Nội dung:"), gbc);
+        JLabel contentLabel = new JLabel("Nội dung:");
+        contentLabel.setForeground(ThemeColors.TEXT_PRIMARY);
+        contentPanel.add(contentLabel, gbc);
         gbc.gridx = 1;
         JTextField contentField = new JTextField(20);
         contentField.setText("Chuyen tien");

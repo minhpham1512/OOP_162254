@@ -117,7 +117,8 @@ public class SystemSettingsView extends JPanel {
         settingsArea.setEditable(false);
         settingsArea.setLineWrap(true);
         settingsArea.setWrapStyleWord(true);
-        settingsArea.setBackground(new Color(240, 240, 240));
+        settingsArea.setBackground(ThemeColors.BG_LIGHT);
+        settingsArea.setForeground(ThemeColors.TEXT_PRIMARY);
         settingsArea.setFont(new Font("Courier New", Font.PLAIN, 11));
         settingsArea.setText("Nhấn 'Xem cài đặt' để xem chi tiết...");
         JScrollPane scrollPane = new JScrollPane(settingsArea);
@@ -149,7 +150,8 @@ public class SystemSettingsView extends JPanel {
         logsArea.setEditable(false);
         logsArea.setLineWrap(true);
         logsArea.setWrapStyleWord(true);
-        logsArea.setBackground(new Color(240, 240, 240));
+        logsArea.setBackground(ThemeColors.BG_LIGHT);
+        logsArea.setForeground(ThemeColors.TEXT_PRIMARY);
         logsArea.setFont(new Font("Courier New", Font.PLAIN, 10));
         logsArea.setText("Nhấn 'Xem nhật ký' để xem hoạt động gần đây...");
         JScrollPane scrollPane = new JScrollPane(logsArea);
@@ -181,7 +183,8 @@ public class SystemSettingsView extends JPanel {
         statsArea.setEditable(false);
         statsArea.setLineWrap(true);
         statsArea.setWrapStyleWord(true);
-        statsArea.setBackground(new Color(240, 240, 240));
+        statsArea.setBackground(ThemeColors.BG_LIGHT);
+        statsArea.setForeground(ThemeColors.TEXT_PRIMARY);
         statsArea.setFont(new Font("Courier New", Font.PLAIN, 11));
         statsArea.setText("Nhấn 'Xem thống kê' để xem tình trạng hệ thống...");
         JScrollPane scrollPane = new JScrollPane(statsArea);
