@@ -29,7 +29,9 @@ public class SavingsAccount {
     public String getSavingsId() { return savingsId; }
     public String getCustomerId() { return customerId; }
     public double getAmount() { return amount; }
+    public int getTermMonths() { return termMonths; }
     public double getInterestRate() { return interestRate; }
+    public Date getStartDate() { return startDate; }
     public Date getMaturityDate() { return maturityDate; }
 
     /**

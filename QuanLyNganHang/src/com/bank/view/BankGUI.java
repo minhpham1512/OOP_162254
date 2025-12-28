@@ -620,6 +620,10 @@ public class BankGUI extends JFrame {
                 BankAccountManagement accountManagement = new BankAccountManagement(db, currentUser, accountService);
                 tabbedPane.addTab("Quản lý tài khoản", accountManagement);
                 
+                // Thêm tab Sổ tiết kiệm
+                BankSavings savingsPanel = new BankSavings(db, currentUser);
+                tabbedPane.addTab("Sổ tiết kiệm", savingsPanel);
+                
                 // Thêm tab lịch sử giao dịch
                 tabbedPane.addTab("Lịch sử giao dịch", createHistoryPanel());
                 
