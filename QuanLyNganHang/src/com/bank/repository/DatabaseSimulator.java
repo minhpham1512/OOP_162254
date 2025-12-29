@@ -20,7 +20,7 @@ public class DatabaseSimulator {
     private static final Map<String, Loan> loans = new HashMap<>();
     private static final Map<String, SavingsAccount> savingsAccounts = new HashMap<>();
     private static final List<Transaction> transactions = new ArrayList<>();
-    //... (Bạn có thể thêm Services, ServiceLogs...)
+    //... (có thể thêm Services, ServiceLogs...)
 
     // --- User Methods ---
     public User findUserById(String customerId) {
